@@ -1,0 +1,18 @@
+{
+  "name": "ab3d-photo-pub",
+  "version": "0.1.0",
+  "description": "Déposez une photo, obtenez une photo publicitaire générée par IA",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "dotenv": "^16.4.7"
+  }
+}

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AB3D Photo Pub</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>AB3D Photo Pub</h1>
+      <p class="subtitle">Déposez une photo de votre produit, recevez un visuel publicitaire.</p>
+    </header>
+
+    <section class="card">
+      <label id="dropzone" class="dropzone" for="file">
+        <input id="file" type="file" accept="image/png,image/jpeg,image/webp" hidden />
+        <img id="preview" alt="" hidden />
+        <span id="dropText">Glissez une photo ici ou cliquez pour choisir<br /><small>PNG, JPEG ou WebP, 10 Mo max</small></span>
+      </label>
+
+      <fieldset class="styles">
+        <legend>Style de la pub</legend>
+        <div id="styleList" class="style-list"></div>
+      </fieldset>
+
+      <label class="instructions">
+        Consignes (optionnel)
+        <textarea id="instructions" rows="2" maxlength="500" placeholder="Ex : fond rose pastel, ajouter des fleurs autour…"></textarea>
+      </label>
+
+      <button id="generate" disabled>Générer la photo pub</button>
+      <p id="status" class="status" role="status"></p>
+    </section>
+
+    <section id="resultSection" class="card result" hidden>
+      <h2>Résultat</h2>
+      <img id="result" alt="Photo publicitaire générée" />
+      <a id="download" class="button" download="photo-pub.png">Télécharger</a>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
