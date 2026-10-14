@@ -64,21 +64,44 @@ AI_BASE_URL=                 # optionnel (endpoint compatible OpenAI auto-héber
 
 Le prompt (dans `src/lib/ai/prompt.ts`) interdit explicitement d'inventer montant, date ou promesse ; le modèle doit répondre en JSON avec trois variantes. Chaque génération (réelle ou simulée) consomme 1 unité du quota mensuel.
 
-## 4. Stripe (phase ultérieure)
+## 4. Stripe (Billing + Tax)
 
-L'intégration est écrite mais **non testée en conditions réelles** dans ce dépôt. Tant que les variables ne sont pas renseignées, les boutons « Passer à Pro/Business » affichent « Bientôt disponible » et aucun paiement n'est possible. **Le plan payant n'est activé que par le webhook, après vérification de la signature Stripe.**
+Relanceo vend un abonnement SaaS mensuel : c'est **Stripe Billing** (Checkout + portail client + webhook). **Stripe Tax** gère la TVA sur vos abonnements, derrière un interrupteur. Stripe Invoicing n'est pas utilisé : les factures de l'abonnement sont générées automatiquement par Billing, et l'application ne facture jamais les clients finaux des artisans.
 
-1. Créez deux produits/prix récurrents mensuels dans Stripe (12 € et 24 €).
-2. Renseignez :
+L'intégration est écrite mais **non testée en conditions réelles** dans ce dépôt. Tant que les variables ne sont pas renseignées, les boutons « Passer à Pro/Business » affichent « Bientôt disponible ». **Le plan payant n'est activé que par le webhook, après vérification de la signature Stripe**, jamais par le retour de Checkout.
+
+### Mise en place (mode test)
+
+1. Exécutez `supabase/migrations/0002_stripe.sql` dans l'éditeur SQL Supabase (colonne de statut + journal d'idempotence).
+2. Créez les produits et prix de test :
+   ```bash
+   STRIPE_SECRET_KEY=sk_test_... node scripts/stripe-setup.mjs
+   ```
+   Le script est idempotent et refuse une clé de production. Il affiche `STRIPE_PRICE_PRO` et `STRIPE_PRICE_BUSINESS` à copier dans `.env.local`.
+3. Renseignez dans `.env.local` (jamais dans le dépôt) :
    ```
    STRIPE_SECRET_KEY=sk_test_...
-   STRIPE_WEBHOOK_SECRET=whsec_...
+   STRIPE_WEBHOOK_SECRET=whsec_...       # fourni par `stripe listen` (étape 4)
    STRIPE_PRICE_PRO=price_...
    STRIPE_PRICE_BUSINESS=price_...
-   SUPABASE_SERVICE_ROLE_KEY=...   # serveur uniquement, jamais exposée au navigateur
+   STRIPE_AUTOMATIC_TAX=false
+   SUPABASE_SERVICE_ROLE_KEY=...         # Supabase → Settings → API, serveur uniquement
    ```
-3. En local : `stripe listen --forward-to localhost:3000/api/stripe/webhook`.
-4. Événements gérés : `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`.
+4. Webhook en local : `stripe listen --forward-to localhost:3000/api/stripe/webhook`.
+5. Dashboard Stripe → Paramètres → **Portail client** : enregistrez la configuration par défaut (sinon « Gérer mon abonnement » échoue).
+6. Testez avec la carte `4242 4242 4242 4242` ; vérifiez que le plan change **après** l'arrivée de l'événement dans `stripe listen`, et que la ligne apparaît dans `stripe_events`.
+
+### Stripe Tax
+
+Activez d'abord Stripe Tax dans le dashboard (adresse d'origine, enregistrements TVA). Ensuite seulement, mettez `STRIPE_AUTOMATIC_TAX=true` : Checkout collecte alors l'adresse de facturation et le numéro de TVA (B2B) et calcule la TVA. Les prix créés par le script sont **TTC** (`tax_behavior: inclusive`), cohérents avec les tarifs affichés.
+
+### Événements traités
+
+`checkout.session.completed` (paiement confirmé → plan activé), `customer.subscription.created/updated/deleted` (changement d'offre, résiliation, impayé → retour en gratuit), `invoice.payment_failed` (statut `past_due`, plan conservé tant que Stripe réessaie). Chaque événement est journalisé dans `stripe_events` : un doublon est ignoré, une erreur renvoie 500 pour que Stripe réessaie.
+
+### Passage en production
+
+Clé `sk_live_`, prix créés depuis le dashboard (le script ne le fait pas volontairement), endpoint webhook `https://votre-domaine/api/stripe/webhook` avec son propre secret, et vérifiez les mentions légales/CGU (conditions de résiliation).
 
 ## 5. Commandes
 
@@ -157,7 +180,7 @@ Exemple avec Vercel (adaptable à tout hébergeur Node) :
 ### Écrit mais **non testé contre un vrai projet Supabase** (pas de Postgres dans l'environnement de développement)
 - Exécution de `0001_init.sql`, inscription/connexion/reset, CRUD clients/devis/relances, historique, export, suppression de compte, quotas en base.
 - Génération IA avec une vraie clé Anthropic/OpenAI.
-- Stripe : Checkout, portail client, webhook.
+- Stripe : Checkout, portail client, webhook, script `scripts/stripe-setup.mjs`.
 
 Ces parcours sont écrits selon la documentation à jour des bibliothèques installées, mais doivent être joués une fois avant de considérer le produit prêt.
 

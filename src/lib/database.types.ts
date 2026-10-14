@@ -16,6 +16,8 @@ export type Profile = {
   plan: PlanId;
   stripe_customer_id: string | null;
   stripe_subscription_id: string | null;
+  subscription_status: string | null;
+  current_period_end: string | null;
   preferences: Record<string, unknown>;
   created_at: string;
   updated_at: string;
@@ -74,6 +76,12 @@ export type ReminderEvent = {
   created_at: string;
 };
 
+export type StripeEvent = {
+  id: string;
+  type: string;
+  processed_at: string;
+};
+
 export type AiGeneration = {
   id: string;
   user_id: string;
@@ -88,7 +96,7 @@ export type Database = {
     Tables: {
       profiles: {
         Row: Profile;
-        Insert: Insert<Profile, "created_at" | "updated_at" | "plan" | "preferences" | "full_name" | "company_name" | "stripe_customer_id" | "stripe_subscription_id">;
+        Insert: Insert<Profile, "created_at" | "updated_at" | "plan" | "preferences" | "full_name" | "company_name" | "stripe_customer_id" | "stripe_subscription_id" | "subscription_status" | "current_period_end">;
         Update: Partial<Profile>;
         Relationships: [];
       };
@@ -114,6 +122,12 @@ export type Database = {
         Row: ReminderEvent;
         Insert: Insert<ReminderEvent, "id" | "created_at" | "reminder_id" | "details">;
         Update: Partial<ReminderEvent>;
+        Relationships: [];
+      };
+      stripe_events: {
+        Row: StripeEvent;
+        Insert: Insert<StripeEvent, "processed_at">;
+        Update: Partial<StripeEvent>;
         Relationships: [];
       };
       ai_generations: {

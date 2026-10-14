@@ -13,6 +13,8 @@ export async function getProfile({ supabase, user }: Session): Promise<Profile> 
       plan: "free",
       stripe_customer_id: null,
       stripe_subscription_id: null,
+      subscription_status: null,
+      current_period_end: null,
       preferences: {},
       created_at: user.created_at,
       updated_at: user.created_at,

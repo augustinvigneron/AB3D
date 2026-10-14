@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ActionButton } from "@/components/app/action-button";
 import { startCheckoutAction, openBillingPortalAction } from "./actions";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Abonnement" };
 
@@ -34,6 +34,11 @@ export default async function SubscriptionPage({ searchParams }: PageProps<"/par
           Paiement annulé. Votre offre actuelle reste inchangée.
         </p>
       )}
+      {profile.subscription_status === "past_due" && (
+        <p role="alert" className="mb-4 rounded-lg border border-danger/30 bg-danger-soft px-3 py-2 text-sm">
+          Le dernier paiement de votre abonnement a échoué. Mettez à jour votre moyen de paiement via « Gérer mon abonnement » pour conserver votre offre.
+        </p>
+      )}
       {!stripeReady && (
         <p className="mb-4 rounded-lg border border-border bg-surface-2 px-3 py-2 text-sm text-fg-muted">
           Les paiements ne sont pas encore activés sur cette instance : les offres payantes sont affichées à titre indicatif.
@@ -47,6 +52,9 @@ export default async function SubscriptionPage({ searchParams }: PageProps<"/par
             <p className="text-lg font-semibold">
               {current.name} <Badge tone={current.id === "free" ? "neutral" : "brand"}>{current.priceMonthly === 0 ? "Gratuit" : `${current.priceMonthly} €/mois`}</Badge>
             </p>
+            {profile.current_period_end && current.id !== "free" && (
+              <p className="text-xs text-fg-subtle">Prochaine échéance : {formatDate(profile.current_period_end)}</p>
+            )}
           </div>
           <dl className="flex gap-6 text-sm">
             <div>
