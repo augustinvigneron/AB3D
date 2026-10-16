@@ -2,16 +2,28 @@
 -- Relanceo AI — schéma initial
 -- À exécuter dans Supabase : SQL Editor → New query → coller → Run
 -- (ou `supabase db push` avec le CLI).
+-- Ce script est idempotent : il peut être relancé sans erreur sur une base
+-- où il a déjà été exécuté (en entier ou en partie).
 -- ============================================================================
 
 create extension if not exists "pgcrypto";
 
 -- ───────────── Types ─────────────
-create type public.client_status as enum ('prospect', 'actif', 'inactif', 'perdu');
-create type public.quote_status as enum ('brouillon', 'envoye', 'en_attente', 'accepte', 'refuse');
-create type public.reminder_status as enum ('a_faire', 'terminee');
-create type public.reminder_channel as enum ('email', 'telephone', 'sms', 'visite', 'autre');
-create type public.plan_id as enum ('free', 'pro', 'business');
+do $$ begin
+  create type public.client_status as enum ('prospect', 'actif', 'inactif', 'perdu');
+exception when duplicate_object then null; end $$;
+do $$ begin
+  create type public.quote_status as enum ('brouillon', 'envoye', 'en_attente', 'accepte', 'refuse');
+exception when duplicate_object then null; end $$;
+do $$ begin
+  create type public.reminder_status as enum ('a_faire', 'terminee');
+exception when duplicate_object then null; end $$;
+do $$ begin
+  create type public.reminder_channel as enum ('email', 'telephone', 'sms', 'visite', 'autre');
+exception when duplicate_object then null; end $$;
+do $$ begin
+  create type public.plan_id as enum ('free', 'pro', 'business');
+exception when duplicate_object then null; end $$;
 
 -- ───────────── Fonctions utilitaires ─────────────
 create or replace function public.set_updated_at()
@@ -31,7 +43,7 @@ language sql immutable as $$
 $$;
 
 -- ───────────── profiles ─────────────
-create table public.profiles (
+create table if not exists public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
   full_name text,
   company_name text,
@@ -43,7 +55,9 @@ create table public.profiles (
   updated_at timestamptz not null default now()
 );
 
-create trigger profiles_updated_at before update on public.profiles
+drop trigger if exists profiles_updated_at on public.profiles;
+create trigger profiles_updated_at
+  before update on public.profiles
   for each row execute function public.set_updated_at();
 
 -- Création automatique du profil à l'inscription.
@@ -60,12 +74,13 @@ begin
   return new;
 end $$;
 
+drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
 
 -- ───────────── clients ─────────────
-create table public.clients (
+create table if not exists public.clients (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users (id) on delete cascade,
   name text not null check (char_length(name) between 1 and 120),
@@ -80,10 +95,12 @@ create table public.clients (
   updated_at timestamptz not null default now()
 );
 
-create index clients_user_id_idx on public.clients (user_id);
-create index clients_user_next_followup_idx on public.clients (user_id, next_followup_at);
+create index if not exists clients_user_id_idx on public.clients (user_id);
+create index if not exists clients_user_next_followup_idx on public.clients (user_id, next_followup_at);
 
-create trigger clients_updated_at before update on public.clients
+drop trigger if exists clients_updated_at on public.clients;
+create trigger clients_updated_at
+  before update on public.clients
   for each row execute function public.set_updated_at();
 
 -- Limite de clients selon le plan, appliquée côté base (impossible à contourner depuis le client).
@@ -105,11 +122,13 @@ begin
   return new;
 end $$;
 
-create trigger clients_enforce_limit before insert on public.clients
+drop trigger if exists clients_enforce_limit on public.clients;
+create trigger clients_enforce_limit
+  before insert on public.clients
   for each row execute function public.enforce_client_limit();
 
 -- ───────────── quotes (devis) ─────────────
-create table public.quotes (
+create table if not exists public.quotes (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users (id) on delete cascade,
   client_id uuid not null references public.clients (id) on delete cascade,
@@ -123,10 +142,12 @@ create table public.quotes (
   updated_at timestamptz not null default now()
 );
 
-create index quotes_user_id_idx on public.quotes (user_id);
-create index quotes_client_id_idx on public.quotes (client_id);
+create index if not exists quotes_user_id_idx on public.quotes (user_id);
+create index if not exists quotes_client_id_idx on public.quotes (client_id);
 
-create trigger quotes_updated_at before update on public.quotes
+drop trigger if exists quotes_updated_at on public.quotes;
+create trigger quotes_updated_at
+  before update on public.quotes
   for each row execute function public.set_updated_at();
 
 -- Un devis doit référencer un client du même utilisateur.
@@ -139,11 +160,13 @@ begin
   return new;
 end $$;
 
-create trigger quotes_check_client_owner before insert or update on public.quotes
+drop trigger if exists quotes_check_client_owner on public.quotes;
+create trigger quotes_check_client_owner
+  before insert or update on public.quotes
   for each row execute function public.check_quote_client_owner();
 
 -- ───────────── reminders (relances) ─────────────
-create table public.reminders (
+create table if not exists public.reminders (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users (id) on delete cascade,
   client_id uuid references public.clients (id) on delete set null,
@@ -158,9 +181,11 @@ create table public.reminders (
   updated_at timestamptz not null default now()
 );
 
-create index reminders_user_due_idx on public.reminders (user_id, status, due_at);
+create index if not exists reminders_user_due_idx on public.reminders (user_id, status, due_at);
 
-create trigger reminders_updated_at before update on public.reminders
+drop trigger if exists reminders_updated_at on public.reminders;
+create trigger reminders_updated_at
+  before update on public.reminders
   for each row execute function public.set_updated_at();
 
 create or replace function public.check_reminder_refs_owner()
@@ -179,11 +204,13 @@ begin
   return new;
 end $$;
 
-create trigger reminders_check_refs_owner before insert or update on public.reminders
+drop trigger if exists reminders_check_refs_owner on public.reminders;
+create trigger reminders_check_refs_owner
+  before insert or update on public.reminders
   for each row execute function public.check_reminder_refs_owner();
 
 -- ───────────── reminder_events (historique des actions) ─────────────
-create table public.reminder_events (
+create table if not exists public.reminder_events (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users (id) on delete cascade,
   reminder_id uuid references public.reminders (id) on delete set null,
@@ -192,17 +219,17 @@ create table public.reminder_events (
   created_at timestamptz not null default now()
 );
 
-create index reminder_events_user_created_idx on public.reminder_events (user_id, created_at desc);
+create index if not exists reminder_events_user_created_idx on public.reminder_events (user_id, created_at desc);
 
 -- ───────────── ai_generations (quota IA) ─────────────
-create table public.ai_generations (
+create table if not exists public.ai_generations (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users (id) on delete cascade,
   simulated boolean not null default false,
   created_at timestamptz not null default now()
 );
 
-create index ai_generations_user_created_idx on public.ai_generations (user_id, created_at);
+create index if not exists ai_generations_user_created_idx on public.ai_generations (user_id, created_at);
 
 -- Nombre de générations consommées ce mois (UTC).
 create or replace function public.ai_usage_this_month()
@@ -267,7 +294,9 @@ alter table public.ai_generations enable row level security;
 
 -- profiles : lecture/mise à jour de son propre profil uniquement.
 -- Le plan n'est PAS modifiable par l'utilisateur (voir trigger ci-dessous).
+drop policy if exists "profiles_select_own" on public.profiles;
 create policy "profiles_select_own" on public.profiles for select to authenticated using (auth.uid() = id);
+drop policy if exists "profiles_update_own" on public.profiles;
 create policy "profiles_update_own" on public.profiles for update to authenticated using (auth.uid() = id) with check (auth.uid() = id);
 
 -- Privilèges de colonne : un utilisateur ne peut modifier que son nom, son
@@ -280,21 +309,27 @@ grant update (full_name, company_name, preferences) on public.profiles to authen
 revoke insert, update, delete on public.ai_generations from authenticated;
 
 -- clients / quotes / reminders / reminder_events : accès complet à ses propres lignes.
+drop policy if exists "clients_all_own" on public.clients;
 create policy "clients_all_own" on public.clients for all to authenticated
   using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
+drop policy if exists "quotes_all_own" on public.quotes;
 create policy "quotes_all_own" on public.quotes for all to authenticated
   using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
+drop policy if exists "reminders_all_own" on public.reminders;
 create policy "reminders_all_own" on public.reminders for all to authenticated
   using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
+drop policy if exists "reminder_events_select_own" on public.reminder_events;
 create policy "reminder_events_select_own" on public.reminder_events for select to authenticated
   using (auth.uid() = user_id);
+drop policy if exists "reminder_events_insert_own" on public.reminder_events;
 create policy "reminder_events_insert_own" on public.reminder_events for insert to authenticated
   with check (auth.uid() = user_id);
 
 -- ai_generations : lecture seule ; l'insertion passe obligatoirement par consume_ai_generation().
+drop policy if exists "ai_generations_select_own" on public.ai_generations;
 create policy "ai_generations_select_own" on public.ai_generations for select to authenticated
   using (auth.uid() = user_id);
 
