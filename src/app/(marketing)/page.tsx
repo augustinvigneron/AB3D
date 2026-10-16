@@ -4,6 +4,8 @@ import { LinkButton } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PLAN_LIST } from "@/lib/plans";
 import { cn } from "@/lib/utils";
+import { TESTIMONIALS } from "@/lib/testimonials";
+import { Testimonials } from "@/components/marketing/testimonials";
 
 const FEATURES = [
   { icon: Users, title: "Fichier clients simple", text: "Nom, contact, statut, notes, dernier échange et prochaine relance. Rien de plus, rien de moins." },
@@ -139,6 +141,9 @@ export default function LandingPage() {
           ))}
         </div>
       </section>
+
+      {/* Avis (masqué tant qu'aucun avis réel n'est ajouté dans src/lib/testimonials.ts) */}
+      <Testimonials items={TESTIMONIALS} />
 
       {/* Tarifs */}
       <section id="tarifs" className="scroll-mt-20 border-y border-border/60 bg-bg-elevated/40">
