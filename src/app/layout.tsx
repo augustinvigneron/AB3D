@@ -8,11 +8,11 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 
 export const metadata: Metadata = {
   title: {
-    default: "Relanceo AI — Ne ratez plus aucune relance client",
-    template: "%s · Relanceo AI",
+    default: "Follow IA — Ne ratez plus aucune relance client",
+    template: "%s · Follow IA",
   },
   description:
-    "Relanceo AI aide les artisans et indépendants à suivre leurs clients, leurs devis et à rédiger leurs relances avec l'aide de l'IA.",
+    "Follow IA aide les artisans et indépendants à suivre leurs clients, leurs devis et à rédiger leurs relances avec l'aide de l'IA.",
 };
 
 export const viewport: Viewport = {

@@ -7,7 +7,7 @@ export default function ConfidentialitePage() {
   return (
     <LegalPage title="Politique de confidentialité" updated="octobre 2026">
       <p>
-        Cette politique décrit les données traitées par Relanceo AI et vos droits. Elle doit être complétée et validée avant toute mise en production (responsable de
+        Cette politique décrit les données traitées par Follow IA et vos droits. Elle doit être complétée et validée avant toute mise en production (responsable de
         traitement, durées de conservation, sous-traitants exacts).
       </p>
       <h2>Responsable du traitement</h2>

@@ -1,5 +1,5 @@
 -- ============================================================================
--- Relanceo AI — préparation Stripe (Billing + Tax)
+-- Follow IA — préparation Stripe (Billing + Tax)
 -- À exécuter après 0001_init.sql.
 -- ============================================================================
 

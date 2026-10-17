@@ -8,7 +8,7 @@ export default function ConditionsPage() {
     <LegalPage title="Conditions générales d'utilisation" updated="octobre 2026">
       <h2>1. Objet</h2>
       <p>
-        Relanceo AI est un service en ligne d'aide au suivi commercial destiné aux artisans et indépendants : gestion de contacts clients, suivi de devis, planification
+        Follow IA est un service en ligne d'aide au suivi commercial destiné aux artisans et indépendants : gestion de contacts clients, suivi de devis, planification
         de relances et aide à la rédaction de messages. Les présentes conditions régissent son utilisation.
       </p>
       <h2>2. Compte</h2>
@@ -29,7 +29,7 @@ export default function ConditionsPage() {
       </p>
       <h2>5. Ce que le service n'est pas</h2>
       <p>
-        Relanceo AI n'est pas un logiciel de facturation : le module « Devis » ne produit pas de documents conformes à la réglementation comptable ou fiscale.
+        Follow IA n'est pas un logiciel de facturation : le module « Devis » ne produit pas de documents conformes à la réglementation comptable ou fiscale.
       </p>
       <h2>6. Usage acceptable</h2>
       <p>

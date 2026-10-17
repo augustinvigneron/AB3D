@@ -8,7 +8,7 @@ export default function MentionsLegalesPage() {
     <LegalPage title="Mentions légales" updated="octobre 2026">
       <h2>Éditeur du site</h2>
       <p>
-        Le site Relanceo AI est édité par <Placeholder>raison sociale ou nom et prénom</Placeholder>, <Placeholder>forme juridique et capital</Placeholder>, dont le
+        Le site Follow IA est édité par <Placeholder>raison sociale ou nom et prénom</Placeholder>, <Placeholder>forme juridique et capital</Placeholder>, dont le
         siège est situé <Placeholder>adresse complète</Placeholder>, immatriculée sous le numéro <Placeholder>SIREN / RCS</Placeholder>.
       </p>
       <p>
@@ -26,7 +26,7 @@ export default function MentionsLegalesPage() {
       </p>
       <h2>Responsabilité</h2>
       <p>
-        Relanceo AI est un outil d'aide au suivi commercial. Les messages proposés par l'assistant doivent être relus avant envoi ; l'éditeur ne saurait être tenu
+        Follow IA est un outil d'aide au suivi commercial. Les messages proposés par l'assistant doivent être relus avant envoi ; l'éditeur ne saurait être tenu
         responsable du contenu des messages envoyés par les utilisateurs à leurs clients.
       </p>
     </LegalPage>
