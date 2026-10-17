@@ -49,6 +49,18 @@ Le fichier `src/app/auth/callback/route.ts` accepte les deux formats.
 
 > Pendant le développement, vous pouvez désactiver « Confirm email » dans *Authentication → Providers → Email* pour vous connecter immédiatement après l'inscription.
 
+### Connexion avec Google (optionnel)
+
+Le bouton « Continuer avec Google » apparaît **automatiquement** sur les pages Connexion et Inscription dès que Google est activé dans Supabase (vérification toutes les 5 minutes). Tant que ce n'est pas fait, il reste caché : aucun bouton ne mène à une erreur.
+
+1. **Google Cloud Console** (console.cloud.google.com) → créez un projet → *APIs & Services* → *OAuth consent screen* : type « External », nom « Relanceo AI », votre email.
+2. *Credentials* → *Create credentials* → *OAuth client ID* → type **Web application**.
+   - *Authorized redirect URIs* : `https://<votre-projet>.supabase.co/auth/v1/callback` (l'URL exacte est affichée dans Supabase, étape 3).
+3. **Supabase** → *Authentication* → *Sign In / Providers* → **Google** → activez, collez le *Client ID* et le *Client Secret* → Save.
+4. **Supabase** → *Authentication* → *URL Configuration* → *Redirect URLs* : ajoutez `https://votre-domaine/**`.
+
+Le premier clic sur le bouton crée le compte (le nom vient du profil Google) ; les suivants connectent.
+
 ## 3. Configurer l'assistant IA (optionnel)
 
 Sans clé, l'assistant fonctionne en **mode simulation** clairement signalé : des gabarits locaux, aucun modèle d'IA, aucune donnée ne quitte le serveur.

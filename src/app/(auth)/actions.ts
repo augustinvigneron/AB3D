@@ -78,6 +78,28 @@ export async function signIn(_prev: ActionState, formData: FormData): Promise<Ac
   redirect(safeNext(raw.next));
 }
 
+/**
+ * Connexion / inscription avec Google (OAuth via Supabase).
+ * Le même bouton sert aux deux : Supabase crée le compte à la première connexion.
+ * Retour sur /auth/callback, qui échange le code contre une session.
+ */
+export async function signInWithGoogle(formData: FormData): Promise<void> {
+  if (!isSupabaseConfigured()) redirect("/configuration-requise");
+  const next = safeNext(formData.get("next"));
+
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${siteUrl()}/auth/callback?next=${encodeURIComponent(next)}`,
+      queryParams: { prompt: "select_account" },
+    },
+  });
+
+  if (error || !data.url) redirect("/connexion?erreur=google");
+  redirect(data.url);
+}
+
 export async function signOut(): Promise<void> {
   if (isSupabaseConfigured()) {
     const supabase = await createClient();

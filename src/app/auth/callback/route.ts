@@ -24,6 +24,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/configuration-requise`);
   }
 
+  // Échec ou annulation côté Google / Supabase (ex. l'utilisateur a refusé l'accès).
+  if (searchParams.get("error")) {
+    return NextResponse.redirect(`${origin}/connexion?erreur=google`);
+  }
+
   const supabase = await createClient();
 
   if (tokenHash && type && (OTP_TYPES as string[]).includes(type)) {
