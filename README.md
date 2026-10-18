@@ -59,6 +59,8 @@ Le bouton « Continuer avec Google » apparaît **automatiquement** sur les page
 3. **Supabase** → *Authentication* → *Sign In / Providers* → **Google** → activez, collez le *Client ID* et le *Client Secret* → Save.
 4. **Supabase** → *Authentication* → *URL Configuration* → *Redirect URLs* : ajoutez `https://votre-domaine/**`.
 
+**Bouton officiel Google (recommandé)** : renseignez `NEXT_PUBLIC_GOOGLE_CLIENT_ID` (l'ID client, pas le secret) dans Vercel puis redéployez, et ajoutez l'adresse du site dans *Credentials* → votre client → *Authorized JavaScript origins*. Google affiche alors l'adresse du site au lieu de `….supabase.co` ; le nom et le logo n'apparaissent qu'après la vérification de la marque par Google (domaine à vous requis). Sans cette variable, le bouton utilise la redirection OAuth classique.
+
 Le premier clic sur le bouton crée le compte (le nom vient du profil Google) ; les suivants connectent.
 
 ## 3. Configurer l'assistant IA (optionnel)

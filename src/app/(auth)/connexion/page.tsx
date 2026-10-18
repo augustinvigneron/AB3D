@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { SignInForm } from "@/components/auth/auth-form";
-import { GoogleButton } from "@/components/auth/google-button";
+import { GoogleSignIn } from "@/components/auth/google-sign-in";
 import { Card } from "@/components/ui/card";
 import { isGoogleAuthEnabled } from "@/lib/supabase/auth-settings";
 
@@ -27,7 +27,7 @@ export default async function SignInPage({ searchParams }: PageProps<"/connexion
         </p>
       )}
       <div className="mt-6">
-        {googleEnabled && <GoogleButton next={next} />}
+        <GoogleSignIn enabled={googleEnabled} next={next} />
         <SignInForm next={next} />
       </div>
     </Card>
