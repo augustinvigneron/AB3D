@@ -11,7 +11,7 @@ const FEATURES = [
   { icon: Users, title: "Fichier clients simple", text: "Nom, contact, statut, notes, dernier échange et prochaine relance. Rien de plus, rien de moins." },
   { icon: FileText, title: "Suivi des devis", text: "Qui a reçu quoi, pour quel montant, et depuis combien de temps vous attendez une réponse." },
   { icon: BellRing, title: "Relances au bon moment", text: "Chaque matin : ce qu'il faut faire aujourd'hui, ce qui est en retard, ce qui arrive." },
-  { icon: Sparkles, title: "Messages rédigés par l'IA", text: "Trois propositions — professionnelle, amicale, courte — à partir de vos informations. Vous relisez, vous envoyez." },
+  { icon: Sparkles, title: "Relances prêtes à envoyer", text: "Choisissez un devis : trois messages — professionnel, amical, court — rédigés avec le bon titre, le bon montant et la bonne date. Vous relisez, vous envoyez." },
   { icon: ShieldCheck, title: "Vos données restent les vôtres", text: "Chaque compte est isolé en base. Export JSON et suppression du compte en un clic." },
   { icon: Smartphone, title: "Sur le chantier comme au bureau", text: "Interface pensée pour le téléphone autant que pour l'ordinateur." },
 ];
@@ -22,8 +22,8 @@ const FAQ = [
     a: "Non. L'assistant rédige des propositions ; vous les copiez dans votre messagerie ou votre téléphone après relecture. Aucun envoi automatique n'est programmé.",
   },
   {
-    q: "L'IA peut-elle inventer un montant ou une date ?",
-    a: "Elle reçoit la consigne stricte de n'utiliser que les informations que vous saisissez. Vous devez tout de même relire chaque message avant envoi : c'est vous qui restez responsable de ce que vous envoyez.",
+    q: "Les messages peuvent-ils contenir un montant ou une date inventés ?",
+    a: "Non : ils sont construits uniquement à partir des informations que vous saisissez ou du devis que vous choisissez. Relisez tout de même chaque message avant envoi : c'est vous qui restez responsable de ce que vous envoyez.",
   },
   {
     q: "Puis-je générer des devis ou des factures conformes ?",

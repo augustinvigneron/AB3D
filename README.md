@@ -63,20 +63,20 @@ Le bouton « Continuer avec Google » apparaît **automatiquement** sur les page
 
 Le premier clic sur le bouton crée le compte (le nom vient du profil Google) ; les suivants connectent.
 
-## 3. Configurer l'assistant IA (optionnel)
+## 3. Assistant de rédaction (sans IA par défaut)
 
-Sans clé, l'assistant fonctionne en **mode simulation** clairement signalé : des gabarits locaux, aucun modèle d'IA, aucune donnée ne quitte le serveur.
+**Sans aucune configuration**, l'assistant rédige trois messages (professionnel, amical, court) à partir de modèles de phrases écrits à la main (`src/lib/ai/templates.ts`), complétés avec les informations réelles : client, titre, montant et date d'envoi du devis choisi, phrase personnelle, signature (Paramètres). Gratuit, illimité, sans quota, aucune donnée envoyée à l'extérieur, et rien n'est inventé (testé). « Autres formulations » fait varier les phrases.
 
-Pour activer une vraie génération, dans `.env.local` :
+**Optionnel : brancher une IA.** Si `AI_API_KEY` est renseignée, l'IA prend le relais automatiquement (avec quota mensuel par offre). Fournisseurs compatibles :
 
 ```
-AI_PROVIDER=anthropic        # ou openai
-AI_API_KEY=sk-...
-AI_MODEL=claude-sonnet-5-5   # ou gpt-4o-mini, etc.
-AI_BASE_URL=                 # optionnel (endpoint compatible OpenAI auto-hébergé)
+AI_PROVIDER=anthropic        # ou openai (pour tout fournisseur compatible OpenAI)
+AI_API_KEY=...
+AI_MODEL=claude-sonnet-5-5   # ex. mistral-small-latest, meta/llama-3.3-70b-instruct
+AI_BASE_URL=                 # ex. https://api.mistral.ai, https://integrate.api.nvidia.com
 ```
 
-Le prompt (dans `src/lib/ai/prompt.ts`) interdit explicitement d'inventer montant, date ou promesse ; le modèle doit répondre en JSON avec trois variantes. Chaque génération (réelle ou simulée) consomme 1 unité du quota mensuel.
+Le prompt (`src/lib/ai/prompt.ts`) interdit d'inventer montant, date ou promesse. Les erreurs du fournisseur (clé refusée, limite atteinte…) sont expliquées en français à l'utilisateur.
 
 ## 4. Stripe (Billing + Tax)
 

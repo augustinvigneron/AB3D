@@ -100,7 +100,7 @@ export function ReminderItem({ reminder, clients, quotes }: ReminderItemProps) {
         )}
         {!done && reminder.client && (
           <Link
-            href={`/assistant?client=${encodeURIComponent(reminder.client.name)}${reminder.quote ? `&devis=${encodeURIComponent(reminder.quote.title)}` : ""}`}
+            href={`/assistant?client=${encodeURIComponent(reminder.client.name)}${reminder.quote ? `&devis=${reminder.quote.id}` : ""}`}
             className="hidden rounded-lg p-2 text-fg-muted hover:bg-surface-2 hover:text-fg sm:block"
             aria-label="Rédiger le message avec l'assistant IA"
             title="Rédiger avec l'IA"

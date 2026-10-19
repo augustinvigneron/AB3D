@@ -37,11 +37,11 @@ export default function ConfidentialitePage() {
         Vous saisissez des informations sur vos propres clients : vous en êtes le responsable de traitement et nous agissons comme sous-traitant. Il vous appartient
         d'informer vos clients et de ne saisir que les données utiles.
       </p>
-      <h2>Assistant IA</h2>
+      <h2>Assistant de rédaction</h2>
       <p>
-        Lorsque vous utilisez l'assistant, les informations saisies dans le formulaire (nom du client, contexte, informations sur le devis, votre nom et entreprise)
-        sont transmises au fournisseur d'IA configuré par l'éditeur : <Placeholder>nom du fournisseur et lien vers sa politique</Placeholder>. Sans clé configurée,
-        aucune donnée ne quitte le serveur (mode simulation).
+        Par défaut, les messages sont rédigés sur nos serveurs à partir de modèles de phrases : aucune donnée n'est transmise à un service extérieur. Si l'éditeur
+        active un fournisseur d'intelligence artificielle, les informations saisies dans le formulaire (nom du client, contexte, informations sur le devis, votre nom
+        et entreprise) lui sont transmises pour rédiger les messages : <Placeholder>nom du fournisseur et lien vers sa politique, si activé</Placeholder>.
       </p>
       <h2>Finalités et base légale</h2>
       <p>Exécution du contrat (fourniture du service), respect d'obligations légales (facturation) et intérêt légitime (sécurité, prévention des abus).</p>

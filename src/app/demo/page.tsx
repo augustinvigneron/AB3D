@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Users, UserPlus, BellRing, AlertTriangle, FileText, Euro, FlaskConical, Sparkles, CalendarCheck, CalendarDays } from "lucide-react";
+import { Users, UserPlus, BellRing, AlertTriangle, FileText, Euro, FlaskConical, PenLine, CalendarCheck, CalendarDays } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { LinkButton } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
@@ -12,7 +12,7 @@ import { StatCard } from "@/components/app/stat-card";
 import { ClientStatusBadge, QuoteStatusBadge } from "@/components/app/status-badge";
 import { computeStats } from "@/lib/data/overview";
 import { DEMO_CLIENTS, DEMO_QUOTES, DEMO_REMINDERS, demoClientById } from "@/lib/demo-data";
-import { simulateVariants } from "@/lib/ai/simulation";
+import { writeFromTemplates } from "@/lib/ai/templates";
 import { classifyDueDate, formatDate, formatEuro, initials } from "@/lib/utils";
 import { REMINDER_CHANNEL_LABELS } from "@/lib/validation/schemas";
 
@@ -25,14 +25,19 @@ export const metadata: Metadata = { title: "Démonstration", robots: { index: fa
 export default function DemoPage() {
   const stats = computeStats(DEMO_CLIENTS, DEMO_QUOTES, DEMO_REMINDERS);
   const open = DEMO_REMINDERS.filter((r) => r.status === "a_faire");
-  const variants = simulateVariants({
+  const demoQuote = DEMO_QUOTES[0];
+  const variants = writeFromTemplates({
     clientName: "Camille Rousseau",
-    context: "Visite en boutique il y a 9 jours, intéressée mais hésite sur le budget",
+    context: "",
     messageType: "relance_devis",
     tone: "professionnel",
-    quoteInfo: "Vitrine réfrigérée + pose, 4 800 €, envoyé il y a 9 jours",
+    quoteInfo: "",
+    quoteTitle: demoQuote.title,
+    quoteAmount: demoQuote.amount,
+    quoteSentAt: demoQuote.sent_at,
     senderName: "Vous",
     companyName: "Votre entreprise",
+    seed: 0,
   });
 
   return (
@@ -151,15 +156,15 @@ export default function DemoPage() {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <CardTitle>
               <span className="flex items-center gap-2">
-                <Sparkles className="size-4 text-brand" /> Assistant IA — exemple
+                <PenLine className="size-4 text-brand" /> Assistant de rédaction — exemple
               </span>
             </CardTitle>
-            <Badge tone="warning">
-              <FlaskConical className="size-3" /> Simulation locale, sans modèle d'IA
+            <Badge tone="info">
+              <PenLine className="size-3" /> Rédigé à partir de modèles
             </Badge>
           </div>
           <p className="mt-1 text-sm text-fg-muted">
-            Pour « Camille Rousseau », relance de devis (vitrine réfrigérée, 4 800 €). Avec une clé d'API configurée, un vrai modèle rédige ces messages.
+            Pour « Camille Rousseau », relance du devis « {demoQuote.title} ». Le titre, le montant et la date d'envoi viennent du devis : rien n'est inventé.
           </p>
           <div className="mt-4 grid gap-4 lg:grid-cols-3">
             {variants.map((v) => (

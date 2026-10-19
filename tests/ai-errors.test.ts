@@ -67,7 +67,7 @@ const okBody = {
   ],
 };
 const cfg = { provider: "openai" as const, apiKey: "test", model: "mistral-small-latest", baseUrl: "https://api.mistral.ai" };
-const req = { clientName: "Camille", context: "", messageType: "relance_devis" as const, tone: "professionnel" as const, quoteInfo: "", senderName: "", companyName: "" };
+const req = { clientName: "Camille", context: "", messageType: "relance_devis" as const, tone: "professionnel" as const, quoteInfo: "", senderName: "", companyName: "", quoteTitle: "", quoteAmount: null, quoteSentAt: null, seed: 0 };
 const tooMany = () => new Response('{"message":"Requests rate limit exceeded"}', { status: 429, headers: { "retry-after": "1" } });
 
 describe("generateWithProvider — limite de débit", () => {

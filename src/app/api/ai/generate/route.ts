@@ -3,15 +3,16 @@ import { createClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { aiRequestSchema, zodFieldErrors } from "@/lib/validation/schemas";
 import { getAiConfig, generateWithProvider, AiProviderError } from "@/lib/ai/provider";
-import { simulateVariants } from "@/lib/ai/simulation";
+import { writeFromTemplates } from "@/lib/ai/templates";
 import { getPlan } from "@/lib/plans";
 
 /**
  * POST /api/ai/generate
  * 1. Vérifie l'utilisateur.
  * 2. Valide l'entrée.
- * 3. Vérifie le quota (lecture) puis génère (IA réelle ou simulation).
- * 4. Consomme le quota de façon atomique (RPC) : si entre-temps il est épuisé, la réponse n'est pas renvoyée.
+ * 3. Sans clé d'IA : rédaction par modèles (gratuite, illimitée, sans appel externe) → réponse immédiate.
+ * 4. Avec clé d'IA : vérifie le quota, appelle le fournisseur, puis consomme le quota
+ *    de façon atomique (RPC) ; si entre-temps il est épuisé, la réponse n'est pas renvoyée.
  */
 export async function POST(request: Request) {
   if (!isSupabaseConfigured()) {
@@ -34,6 +35,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Données invalides.", errors: zodFieldErrors(parsed.error) }, { status: 400 });
   }
 
+  const cfg = getAiConfig();
+
+  // Rédaction par modèles : aucun coût, aucune donnée envoyée à l'extérieur, donc pas de quota.
+  if (cfg === null) {
+    return NextResponse.json({ mode: "templates", variants: writeFromTemplates(parsed.data), quota: null });
+  }
+
   // Pré-vérification du quota (évite d'appeler le fournisseur pour rien).
   const [{ data: profile }, { data: used }] = await Promise.all([
     supabase.from("profiles").select("plan").eq("id", user.id).maybeSingle(),
@@ -48,18 +56,16 @@ export async function POST(request: Request) {
     );
   }
 
-  const cfg = getAiConfig();
-  const simulated = cfg === null;
   let variants;
   try {
-    variants = simulated ? simulateVariants(parsed.data) : await generateWithProvider(cfg, parsed.data);
+    variants = await generateWithProvider(cfg, parsed.data);
   } catch (err) {
     const message = err instanceof AiProviderError ? err.message : "Le service d'IA est momentanément indisponible. Réessayez dans quelques minutes.";
     return NextResponse.json({ error: `${message} Cette tentative n'a pas été décomptée de votre quota.` }, { status: 502 });
   }
 
   // Consommation atomique du quota (la base verrouille le profil pendant l'opération).
-  const { data: consumed, error: rpcError } = await supabase.rpc("consume_ai_generation", { p_simulated: simulated });
+  const { data: consumed, error: rpcError } = await supabase.rpc("consume_ai_generation", { p_simulated: false });
   const result = Array.isArray(consumed) ? consumed[0] : consumed;
   if (rpcError || !result) {
     return NextResponse.json({ error: "Impossible de vérifier votre quota. Réessayez." }, { status: 500 });
@@ -72,7 +78,7 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({
-    simulated,
+    mode: "ai",
     variants,
     quota: { used: result.used, limit: result.limit_value, plan: result.plan },
   });

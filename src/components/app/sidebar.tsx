@@ -25,7 +25,7 @@ const NAV = [
   { href: "/clients", label: "Clients", icon: Users },
   { href: "/devis", label: "Devis", icon: FileText },
   { href: "/relances", label: "Relances", icon: BellRing },
-  { href: "/assistant", label: "Assistant IA", icon: Sparkles },
+  { href: "/assistant", label: "Assistant", icon: Sparkles },
 ] as const;
 
 const SECONDARY = [

@@ -26,13 +26,23 @@ Tu réponds UNIQUEMENT avec un objet JSON valide, sans texte autour, de la forme
 {"variants":[{"style":"professionnel","subject":"...","body":"..."},{"style":"amical","subject":"...","body":"..."},{"style":"court","subject":"...","body":"..."}]}
 Le champ "subject" est un objet d'email court. Le champ "body" contient le message avec des retours à la ligne (\\n).`;
 
+function quoteDescription(req: AiRequest): string {
+  const parts = [
+    req.quoteTitle ? `titre « ${req.quoteTitle} »` : "",
+    typeof req.quoteAmount === "number" ? `montant ${req.quoteAmount.toFixed(2).replace(".", ",")} €` : "",
+    req.quoteSentAt ? `envoyé le ${req.quoteSentAt}` : "",
+    req.quoteInfo ? req.quoteInfo : "",
+  ].filter(Boolean);
+  return parts.length ? parts.join(", ") : "(aucune information de devis fournie — ne mentionne aucun montant ni date)";
+}
+
 export function buildUserPrompt(req: AiRequest): string {
   const lines = [
     `Nom du client : ${req.clientName}`,
     `Type de message : ${MESSAGE_TYPE_LABELS[req.messageType]}`,
     `Ton général souhaité : ${TONE_LABELS[req.tone]}`,
     `Contexte de la relation : ${req.context || "(non précisé)"}`,
-    `Informations sur le devis : ${req.quoteInfo || "(aucune information de devis fournie — ne mentionne aucun montant ni date)"}`,
+    `Informations sur le devis : ${quoteDescription(req)}`,
     `Nom de l'expéditeur : ${req.senderName || "(non fourni)"}`,
     `Entreprise de l'expéditeur : ${req.companyName || "(non fournie)"}`,
     "",

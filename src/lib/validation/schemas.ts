@@ -160,6 +160,24 @@ export const aiRequestSchema = z.object({
   quoteInfo: z.string().trim().max(1000, "1000 caractères maximum").optional().default(""),
   senderName: z.string().trim().max(120).optional().default(""),
   companyName: z.string().trim().max(120).optional().default(""),
+  // Données structurées d'un devis existant (remplies quand l'utilisateur choisit un devis).
+  quoteTitle: z.string().trim().max(160).optional().default(""),
+  quoteAmount: z
+    .union([z.number(), z.string()])
+    .optional()
+    .transform((v) => {
+      if (v === undefined || v === "") return null;
+      const n = typeof v === "number" ? v : Number(String(v).replace(",", "."));
+      return Number.isFinite(n) && n >= 0 && n <= 99_999_999 ? Math.round(n * 100) / 100 : null;
+    }),
+  quoteSentAt: z
+    .string()
+    .trim()
+    .regex(/^(\d{4}-\d{2}-\d{2})?$/, "Date invalide")
+    .optional()
+    .transform((v) => (v ? v : null)),
+  /** Graine de variation : « Régénérer » l'incrémente pour obtenir d'autres formulations. */
+  seed: z.coerce.number().int().min(0).max(1_000_000).optional().default(0),
 });
 export type AiRequest = z.infer<typeof aiRequestSchema>;
 
