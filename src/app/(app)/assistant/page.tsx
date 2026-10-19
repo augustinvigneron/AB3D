@@ -3,7 +3,7 @@ import { Sparkles } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { getProfile } from "@/lib/data/profile";
 import { getPlan } from "@/lib/plans";
-import { getAiConfig } from "@/lib/ai/provider";
+import { getAiConfig, providerName } from "@/lib/ai/provider";
 import { PageHeader } from "@/components/ui/page-header";
 import { AiAssistant } from "@/components/app/ai-assistant";
 
@@ -24,7 +24,7 @@ export default async function AssistantPage({ searchParams }: PageProps<"/assist
       />
       <AiAssistant
         aiConfigured={cfg !== null}
-        providerLabel={cfg ? `${cfg.provider === "anthropic" ? "Anthropic" : "OpenAI"} (${cfg.model})` : null}
+        providerLabel={cfg ? `${providerName(cfg)} (${cfg.model})` : null}
         initialQuota={{ used: typeof used === "number" ? used : 0, limit: plan.maxAiGenerationsPerMonth, plan: plan.id }}
         defaults={{
           clientName: typeof params.client === "string" ? params.client.slice(0, 120) : "",

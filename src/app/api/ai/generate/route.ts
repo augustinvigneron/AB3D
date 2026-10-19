@@ -54,8 +54,8 @@ export async function POST(request: Request) {
   try {
     variants = simulated ? simulateVariants(parsed.data) : await generateWithProvider(cfg, parsed.data);
   } catch (err) {
-    const message = err instanceof AiProviderError ? err.message : "Le service d'IA est momentanément indisponible.";
-    return NextResponse.json({ error: `Génération impossible : ${message}. Votre quota n'a pas été décompté.` }, { status: 502 });
+    const message = err instanceof AiProviderError ? err.message : "Le service d'IA est momentanément indisponible. Réessayez dans quelques minutes.";
+    return NextResponse.json({ error: `${message} Cette tentative n'a pas été décomptée de votre quota.` }, { status: 502 });
   }
 
   // Consommation atomique du quota (la base verrouille le profil pendant l'opération).
