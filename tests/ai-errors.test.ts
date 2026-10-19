@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { describeHttpError, extractProviderMessage, providerName } from "@/lib/ai/provider";
+import { describeHttpError, extractProviderMessage, providerName, supportsJsonMode } from "@/lib/ai/provider";
 
 describe("providerName", () => {
   it("reconnaît le fournisseur d'après AI_BASE_URL", () => {
@@ -9,6 +9,13 @@ describe("providerName", () => {
     expect(providerName({ provider: "openai" })).toBe("OpenAI");
     expect(providerName({ provider: "anthropic" })).toBe("Anthropic");
     expect(providerName({ provider: "openai", baseUrl: "https://llm.example.com" })).toBe("llm.example.com");
+    expect(providerName({ provider: "openai", baseUrl: "https://integrate.api.nvidia.com" })).toBe("NVIDIA");
+  });
+  it("n'active le mode JSON que chez les fournisseurs qui le gèrent", () => {
+    expect(supportsJsonMode({ baseUrl: "https://api.mistral.ai" })).toBe(true);
+    expect(supportsJsonMode({})).toBe(true);
+    expect(supportsJsonMode({ baseUrl: "https://integrate.api.nvidia.com" })).toBe(false);
+    expect(supportsJsonMode({ baseUrl: "https://openrouter.ai/api" })).toBe(false);
   });
 });
 
@@ -21,6 +28,7 @@ describe("extractProviderMessage", () => {
   });
   it("masque ce qui ressemble à une clé", () => {
     expect(extractProviderMessage('{"error":{"message":"Incorrect API key provided: sk-abc123456789xyz"}}')).toBe("Incorrect API key provided: [clé masquée]");
+    expect(extractProviderMessage('{"detail":"Bad key nvapi-AbCdEf123456"}')).toBe("Bad key [clé masquée]");
   });
 });
 
@@ -82,5 +90,19 @@ describe("generateWithProvider — limite de débit", () => {
     expect(err.message).toContain("Mistral refuse temporairement");
     expect(err.message).toContain("Requests rate limit exceeded");
     expect(err.message).not.toContain("OpenAI");
+  });
+});
+
+describe("NVIDIA", () => {
+  afterEach(() => vi.unstubAllGlobals());
+  it("appelle l'endpoint NVIDIA sans mode JSON et lit la réponse", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify(okBody), { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+    const variants = await generateWithProvider({ ...cfg, model: "meta/llama-3.3-70b-instruct", baseUrl: "https://integrate.api.nvidia.com" }, req);
+    expect(fetchMock.mock.calls[0][0]).toBe("https://integrate.api.nvidia.com/v1/chat/completions");
+    const sent = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(sent.response_format).toBeUndefined();
+    expect(sent.model).toBe("meta/llama-3.3-70b-instruct");
+    expect(variants).toHaveLength(3);
   });
 });

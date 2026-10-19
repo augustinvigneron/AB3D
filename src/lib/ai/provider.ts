@@ -23,7 +23,19 @@ const KNOWN_HOSTS: Record<string, string> = {
   "api.mistral.ai": "Mistral",
   "api.groq.com": "Groq",
   "openrouter.ai": "OpenRouter",
+  "integrate.api.nvidia.com": "NVIDIA",
 };
+
+/** Fournisseurs dont on sait qu'ils acceptent response_format json_object. Les autres reçoivent la consigne JSON par le prompt seul. */
+const JSON_MODE_HOSTS = new Set(["api.openai.com", "api.mistral.ai", "api.groq.com"]);
+
+export function supportsJsonMode(cfg: Pick<AiConfig, "baseUrl">): boolean {
+  try {
+    return JSON_MODE_HOSTS.has(new URL(cfg.baseUrl ?? "https://api.openai.com").hostname);
+  } catch {
+    return false;
+  }
+}
 
 /** Nom lisible du fournisseur réellement appelé (d'après AI_BASE_URL), pour les messages d'erreur. */
 export function providerName(cfg: Pick<AiConfig, "provider" | "baseUrl">): string {
@@ -38,7 +50,7 @@ export function providerName(cfg: Pick<AiConfig, "provider" | "baseUrl">): strin
 
 /** Retire tout ce qui ressemble à une clé d'API d'un message renvoyé par le fournisseur. */
 function maskSecrets(text: string): string {
-  return text.replace(/\b(?:sk|gsk|pk|rk|key)[-_][A-Za-z0-9*_\-.]{6,}/gi, "[clé masquée]");
+  return text.replace(/\b(?:sk|gsk|pk|rk|key|nvapi)[-_][A-Za-z0-9*_\-.]{6,}/gi, "[clé masquée]");
 }
 
 /** Extrait le message d'erreur d'une réponse JSON de fournisseur (formats OpenAI, Anthropic, Mistral…). */
@@ -136,7 +148,8 @@ async function callOpenAICompatible(cfg: AiConfig, req: AiRequest): Promise<stri
     {
       model: cfg.model,
       temperature: 0.7,
-      response_format: { type: "json_object" },
+      ...(supportsJsonMode(cfg) ? { response_format: { type: "json_object" } } : {}),
+      max_tokens: 1500,
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         { role: "user", content: buildUserPrompt(req) },
