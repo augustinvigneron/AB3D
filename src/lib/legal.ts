@@ -9,21 +9,21 @@
  */
 export const LEGAL = {
   /** Nom et prénom (entrepreneur individuel) ou raison sociale (société). Ex. : « Jean Dupont » ou « Follow IA SAS ». */
-  editorName: "",
+  editorName: "Nexora",
   /** Statut juridique. Ex. : « Entrepreneur individuel (micro-entreprise) » ou « SAS au capital de 1 000 € ». */
-  editorStatus: "",
+  editorStatus: "SAS",
   /** Adresse postale complète de l'entreprise (ou de domiciliation). */
-  address: "",
+  address: "45 rue Nadar, 92500 Rueil-Malmaison, France",
   /** Numéro SIREN (9 chiffres) ; ajoutez « RCS Ville » ou « RNE » selon le cas. */
   siren: "",
   /** Email de contact, utilisé aussi pour les demandes RGPD. */
-  email: "",
+  email: "augustinvigneron767@gmail.com",
   /** Directeur de la publication (en général l'entrepreneur ou le président de la société). */
   publicationDirector: "",
   /** Région du projet Supabase (Supabase → Project Settings → General). Ex. : « Union européenne (Paris) ». */
-  databaseRegion: "",
+  databaseRegion: "États-Unis (Virginie du Nord, us-east-1)",
   /** Ville du siège, pour la juridiction compétente. */
-  courtCity: "",
+  courtCity: "Nanterre (siège à Rueil-Malmaison)",
   /** Date affichée en haut des pages légales. */
   lastUpdated: "20 octobre 2026",
 };
