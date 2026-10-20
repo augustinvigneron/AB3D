@@ -30,7 +30,7 @@ export function SiteFooter() {
           </Link>
         </nav>
       </div>
-      <p className="border-t border-border/60 py-4 text-center text-xs text-fg-subtle">© {new Date().getFullYear()} Nexora. Tous droits réservés.</p>
+      <p className="border-t border-border/60 py-4 text-center text-xs text-fg-subtle">© {new Date().getFullYear()} Nuvarex. Tous droits réservés.</p>
     </footer>
   );
 }

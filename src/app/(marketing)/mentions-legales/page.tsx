@@ -9,7 +9,7 @@ export default function MentionsLegalesPage() {
     <LegalPage title="Mentions légales">
       <h2>Éditeur du site</h2>
       <p>
-        Le site Nexora est édité par <Fill field="editorName" /><Fill field="editorStatus" optional prefix=", " />.
+        Le site Nuvarex est édité par <Fill field="editorName" /><Fill field="editorStatus" optional prefix=", " />.
         <br />
         Adresse : <Fill field="address" />
         <br />
@@ -38,7 +38,7 @@ export default function MentionsLegalesPage() {
 
       <h2>Responsabilité</h2>
       <p>
-        Nexora est un outil d'aide au suivi commercial. Les messages proposés doivent être relus avant envoi ; l'éditeur ne saurait être tenu responsable du
+        Nuvarex est un outil d'aide au suivi commercial. Les messages proposés doivent être relus avant envoi ; l'éditeur ne saurait être tenu responsable du
         contenu des messages envoyés par les utilisateurs à leurs clients. Voir les <Link href="/conditions-utilisation">conditions d'utilisation</Link>.
       </p>
 

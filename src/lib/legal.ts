@@ -8,8 +8,8 @@
  * Ne mettez que des informations exactes.
  */
 export const LEGAL = {
-  /** Nom et prénom (entrepreneur individuel) ou raison sociale (société). Ex. : « Jean Dupont » ou « Nexora SAS ». */
-  editorName: "Nexora",
+  /** Nom et prénom (entrepreneur individuel) ou raison sociale (société). Ex. : « Jean Dupont » ou « Nuvarex SAS ». */
+  editorName: "Nuvarex",
   /** Statut juridique, une fois l'entreprise immatriculée. Ex. : « SAS au capital de 1 000 € ». Vide = non affiché. */
   editorStatus: "",
   /** Adresse postale complète de l'entreprise (ou de domiciliation). */

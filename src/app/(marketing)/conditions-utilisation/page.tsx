@@ -9,14 +9,14 @@ export default function ConditionsPage() {
     <LegalPage title="Conditions générales d'utilisation">
       <h2>1. Objet et acceptation</h2>
       <p>
-        Les présentes conditions encadrent l'utilisation du service Nexora, édité par <Fill field="editorName" /> (voir les{" "}
+        Les présentes conditions encadrent l'utilisation du service Nuvarex, édité par <Fill field="editorName" /> (voir les{" "}
         <Link href="/mentions-legales">mentions légales</Link>). En créant un compte, vous les acceptez sans réserve. Si vous n'êtes pas d'accord, n'utilisez pas le
         service.
       </p>
 
       <h2>2. Un service destiné aux professionnels</h2>
       <p>
-        Nexora s'adresse aux professionnels — artisans, indépendants, très petites entreprises — qui l'utilisent pour leur activité. En vous inscrivant, vous
+        Nuvarex s'adresse aux professionnels — artisans, indépendants, très petites entreprises — qui l'utilisent pour leur activité. En vous inscrivant, vous
         déclarez agir à des fins professionnelles. Le service n'est pas destiné aux particuliers agissant pour leurs besoins personnels.
       </p>
 
@@ -31,7 +31,7 @@ export default function ConditionsPage() {
       </ul>
 
       <h2>4. Description du service</h2>
-      <p>Nexora vous permet notamment :</p>
+      <p>Nuvarex vous permet notamment :</p>
       <ul>
         <li>de tenir un fichier de clients et de prospects ;</li>
         <li>
@@ -83,7 +83,7 @@ export default function ConditionsPage() {
 
       <h2>7. Les données de vos clients (sous-traitance)</h2>
       <p>
-        Pour les données de vos clients et prospects que vous enregistrez, <strong>vous êtes le responsable de traitement</strong> et Nexora agit en tant que{" "}
+        Pour les données de vos clients et prospects que vous enregistrez, <strong>vous êtes le responsable de traitement</strong> et Nuvarex agit en tant que{" "}
         <strong>sous-traitant</strong> au sens de l'article 28 du RGPD. À ce titre, l'éditeur s'engage à :
       </p>
       <ul>

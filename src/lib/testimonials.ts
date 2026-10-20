@@ -2,7 +2,7 @@
  * Avis clients affichés sur la page d'accueil.
  *
  * ⚠️ RÈGLE ABSOLUE : uniquement des avis RÉELS.
- * - La personne a réellement utilisé Nexora.
+ * - La personne a réellement utilisé Nuvarex.
  * - Elle vous a donné son accord écrit (email, SMS) pour publier son avis et son nom.
  * - Vous conservez cette preuve d'accord.
  * - Vous ne modifiez pas le sens de ce qu'elle a dit.

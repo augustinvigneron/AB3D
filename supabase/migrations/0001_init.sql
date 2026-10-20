@@ -1,5 +1,5 @@
 -- ============================================================================
--- Nexora — schéma initial
+-- Nuvarex — schéma initial
 -- À exécuter dans Supabase : SQL Editor → New query → coller → Run
 -- (ou `supabase db push` avec le CLI).
 -- Ce script est idempotent : il peut être relancé sans erreur sur une base

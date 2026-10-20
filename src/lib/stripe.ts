@@ -6,7 +6,7 @@ import type { PlanId } from "@/lib/plans";
 export function getStripe(): Stripe | null {
   const key = process.env.STRIPE_SECRET_KEY?.trim();
   if (!key) return null;
-  return new Stripe(key, { appInfo: { name: "Nexora" } });
+  return new Stripe(key, { appInfo: { name: "Nuvarex" } });
 }
 
 export function isStripeConfigured(): boolean {

@@ -2,11 +2,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
-/** Icône Nexora (fichier public/brand/nexora-icone-512.png). */
+/** Icône Nuvarex (fichier public/brand/nuvarex-icone-512.png). */
 export function LogoMark({ className }: { className?: string }) {
   return (
     <Image
-      src="/brand/nexora-icone-512.png"
+      src="/brand/nuvarex-icone-512.png"
       alt=""
       aria-hidden
       width={32}
@@ -21,7 +21,7 @@ export function Logo({ href = "/", className }: { href?: string; className?: str
   return (
     <Link href={href} className={cn("flex items-center gap-2.5 font-semibold tracking-tight", className)}>
       <LogoMark />
-      <span className="text-[15px]">Nexora</span>
+      <span className="text-[15px]">Nuvarex</span>
     </Link>
   );
 }

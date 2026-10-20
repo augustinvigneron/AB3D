@@ -8,8 +8,8 @@ export default function ConfidentialitePage() {
   return (
     <LegalPage title="Politique de confidentialité">
       <p>
-        Cette politique explique quelles données Nexora traite, pourquoi, combien de temps, avec qui elles sont partagées et comment exercer vos droits. Elle
-        s'applique au site et à l'application Nexora.
+        Cette politique explique quelles données Nuvarex traite, pourquoi, combien de temps, avec qui elles sont partagées et comment exercer vos droits. Elle
+        s'applique au site et à l'application Nuvarex.
       </p>
 
       <h2>1. Qui est responsable de vos données ?</h2>
@@ -19,7 +19,7 @@ export default function ConfidentialitePage() {
       <p>
         Pour toute question ou pour exercer vos droits : <Fill field="email" />.
       </p>
-      <p>Nexora intervient à deux titres différents :</p>
+      <p>Nuvarex intervient à deux titres différents :</p>
       <ul>
         <li>
           <strong>Responsable de traitement</strong> pour les données de votre compte (identité, connexion, abonnement).
@@ -88,7 +88,7 @@ export default function ConfidentialitePage() {
 
       <h2>3. Cookies</h2>
       <p>
-        Nexora n'utilise que des <strong>cookies strictement nécessaires</strong> : les cookies de session qui vous gardent connecté de manière sécurisée. Ils sont
+        Nuvarex n'utilise que des <strong>cookies strictement nécessaires</strong> : les cookies de session qui vous gardent connecté de manière sécurisée. Ils sont
         exemptés de consentement (article 82 de la loi Informatique et Libertés), c'est pourquoi aucun bandeau ne vous est demandé.
       </p>
       <p>
@@ -122,7 +122,7 @@ export default function ConfidentialitePage() {
         <li>
           <strong>Gmail et Google Agenda</strong> (offre Business) : les boutons « Gmail » et « Google Agenda » ouvrent simplement une page Google dans votre
           navigateur, pré-remplie avec le message ou la relance concernée (nom, adresse email du client, texte). Ce contenu est transmis à Google depuis votre
-          propre compte, au moment où vous cliquez. Nexora n'a <strong>aucun accès</strong> à votre boîte mail ni à votre agenda et n'envoie rien à votre place.
+          propre compte, au moment où vous cliquez. Nuvarex n'a <strong>aucun accès</strong> à votre boîte mail ni à votre agenda et n'envoie rien à votre place.
         </li>
       </ul>
       <p>

@@ -1,5 +1,5 @@
 -- ============================================================================
--- Nexora — nouvelles limites des offres
+-- Nuvarex — nouvelles limites des offres
 -- À exécuter après 0001 et 0002 (SQL Editor → coller → Run). Relançable sans risque.
 --
 --   Gratuit  : 10 clients,  5 générations de messages par mois

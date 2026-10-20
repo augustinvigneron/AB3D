@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Crée (ou retrouve) les produits et prix Stripe de Nexora, puis affiche
+ * Crée (ou retrouve) les produits et prix Stripe de Nuvarex, puis affiche
  * les variables d'environnement à copier dans .env.local.
  *
  * Usage (depuis la racine du projet, avec votre clé de TEST) :
@@ -24,8 +24,8 @@ if (!key.startsWith("sk_test_")) {
 const stripe = new Stripe(key);
 
 const PLANS = [
-  { lookupKey: "nexora_pro_monthly", name: "Nexora — Pro", description: "Jusqu'à 300 clients, 100 générations de messages par mois.", amount: 1200, env: "STRIPE_PRICE_PRO" },
-  { lookupKey: "nexora_business_monthly", name: "Nexora — Business", description: "Clients illimités, générations de messages illimitées, raccourcis Gmail et Google Agenda, support prioritaire.", amount: 2400, env: "STRIPE_PRICE_BUSINESS" },
+  { lookupKey: "nuvarex_pro_monthly", name: "Nuvarex — Pro", description: "Jusqu'à 300 clients, 100 générations de messages par mois.", amount: 1200, env: "STRIPE_PRICE_PRO" },
+  { lookupKey: "nuvarex_business_monthly", name: "Nuvarex — Business", description: "Clients illimités, générations de messages illimitées, raccourcis Gmail et Google Agenda, support prioritaire.", amount: 2400, env: "STRIPE_PRICE_BUSINESS" },
 ];
 
 const envLines = [];

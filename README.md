@@ -1,4 +1,4 @@
-# Nexora
+# Nuvarex
 
 SaaS de suivi client et de relances commerciales pour artisans et indépendants, avec un assistant qui rédige les messages de relance (vous relisez, vous envoyez).
 
@@ -54,7 +54,7 @@ Le fichier `src/app/auth/callback/route.ts` accepte les deux formats.
 
 Le bouton « Continuer avec Google » apparaît **automatiquement** sur les pages Connexion et Inscription dès que Google est activé dans Supabase (vérification toutes les 5 minutes). Tant que ce n'est pas fait, il reste caché : aucun bouton ne mène à une erreur.
 
-1. **Google Cloud Console** (console.cloud.google.com) → créez un projet → *APIs & Services* → *OAuth consent screen* : type « External », nom « Nexora », votre email.
+1. **Google Cloud Console** (console.cloud.google.com) → créez un projet → *APIs & Services* → *OAuth consent screen* : type « External », nom « Nuvarex », votre email.
 2. *Credentials* → *Create credentials* → *OAuth client ID* → type **Web application**.
    - *Authorized redirect URIs* : `https://<votre-projet>.supabase.co/auth/v1/callback` (l'URL exacte est affichée dans Supabase, étape 3).
 3. **Supabase** → *Authentication* → *Sign In / Providers* → **Google** → activez, collez le *Client ID* et le *Client Secret* → Save.
@@ -85,7 +85,7 @@ Le prompt (`src/lib/ai/prompt.ts`) interdit d'inventer montant, date ou promesse
 
 ## 4. Stripe (Billing + Tax)
 
-Nexora vend un abonnement SaaS mensuel : c'est **Stripe Billing** (Checkout + portail client + webhook). **Stripe Tax** gère la TVA sur vos abonnements, derrière un interrupteur. Stripe Invoicing n'est pas utilisé : les factures de l'abonnement sont générées automatiquement par Billing, et l'application ne facture jamais les clients finaux des artisans.
+Nuvarex vend un abonnement SaaS mensuel : c'est **Stripe Billing** (Checkout + portail client + webhook). **Stripe Tax** gère la TVA sur vos abonnements, derrière un interrupteur. Stripe Invoicing n'est pas utilisé : les factures de l'abonnement sont générées automatiquement par Billing, et l'application ne facture jamais les clients finaux des artisans.
 
 L'intégration est écrite mais **non testée en conditions réelles** dans ce dépôt. Tant que les variables ne sont pas renseignées, les boutons « Passer à Pro/Business » affichent « Bientôt disponible ». **Le plan payant n'est activé que par le webhook, après vérification de la signature Stripe**, jamais par le retour de Checkout.
 
