@@ -102,8 +102,8 @@ export function ReminderItem({ reminder, clients, quotes }: ReminderItemProps) {
           <Link
             href={`/assistant?client=${encodeURIComponent(reminder.client.name)}${reminder.quote ? `&devis=${reminder.quote.id}` : ""}`}
             className="hidden rounded-lg p-2 text-fg-muted hover:bg-surface-2 hover:text-fg sm:block"
-            aria-label="Rédiger le message avec l'assistant IA"
-            title="Rédiger avec l'IA"
+            aria-label="Rédiger le message avec l'assistant"
+            title="Rédiger le message"
           >
             <Sparkles className="size-4 text-brand" />
           </Link>

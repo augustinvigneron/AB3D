@@ -181,7 +181,7 @@ export default function DemoPage() {
 
         <div className="card flex flex-col items-center gap-3 p-8 text-center">
           <h2 className="text-xl font-bold">Prêt à suivre vos vrais clients ?</h2>
-          <p className="max-w-md text-sm text-fg-muted">Créez un compte gratuit : jusqu'à 10 clients et 5 générations IA par mois, sans carte bancaire.</p>
+          <p className="max-w-md text-sm text-fg-muted">Créez un compte gratuit : jusqu'à 10 clients et 5 générations de messages par mois, sans carte bancaire.</p>
           <LinkButton href="/inscription" size="lg">
             Essayer gratuitement
           </LinkButton>

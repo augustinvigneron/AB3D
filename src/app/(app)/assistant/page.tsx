@@ -22,7 +22,7 @@ export default async function AssistantPage({ searchParams }: PageProps<"/assist
       .in("status", ["envoye", "en_attente", "brouillon"])
       .order("created_at", { ascending: false })
       .limit(50),
-    cfg ? session.supabase.rpc("ai_usage_this_month") : Promise.resolve({ data: null }),
+    session.supabase.rpc("ai_usage_this_month"),
   ]);
   const plan = getPlan(profile.plan);
 
@@ -49,7 +49,7 @@ export default async function AssistantPage({ searchParams }: PageProps<"/assist
       <AiAssistant
         mode={cfg ? "ai" : "templates"}
         providerLabel={cfg ? `${providerName(cfg)} (${cfg.model})` : null}
-        initialQuota={cfg ? { used, limit: plan.maxAiGenerationsPerMonth, plan: plan.id } : null}
+        initialQuota={{ used, limit: plan.maxAiGenerationsPerMonth, plan: plan.id }}
         quotes={quotes}
         defaults={{
           clientName: typeof params.client === "string" ? params.client.slice(0, 120) : (matchedQuote?.clientName ?? ""),

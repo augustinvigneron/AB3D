@@ -8,10 +8,10 @@
  * Ne mettez que des informations exactes.
  */
 export const LEGAL = {
-  /** Nom et prénom (entrepreneur individuel) ou raison sociale (société). Ex. : « Jean Dupont » ou « Follow IA SAS ». */
+  /** Nom et prénom (entrepreneur individuel) ou raison sociale (société). Ex. : « Jean Dupont » ou « Nexora SAS ». */
   editorName: "Nexora",
-  /** Statut juridique. Ex. : « Entrepreneur individuel (micro-entreprise) » ou « SAS au capital de 1 000 € ». */
-  editorStatus: "SAS",
+  /** Statut juridique, une fois l'entreprise immatriculée. Ex. : « SAS au capital de 1 000 € ». Vide = non affiché. */
+  editorStatus: "",
   /** Adresse postale complète de l'entreprise (ou de domiciliation). */
   address: "45 rue Nadar, 92500 Rueil-Malmaison, France",
   /** Numéro SIREN (9 chiffres) ; ajoutez « RCS Ville » ou « RNE » selon le cas. */
@@ -32,5 +32,7 @@ export type LegalField = Exclude<keyof typeof LEGAL, "lastUpdated">;
 
 /** Liste des champs encore vides (utile pour vérifier avant la mise en ligne). */
 export function missingLegalFields(): LegalField[] {
-  return (Object.keys(LEGAL) as Array<keyof typeof LEGAL>).filter((k): k is LegalField => k !== "lastUpdated" && LEGAL[k].trim() === "");
+  return (Object.keys(LEGAL) as Array<keyof typeof LEGAL>).filter(
+    (k): k is LegalField => k !== "lastUpdated" && k !== "editorStatus" && LEGAL[k].trim() === "",
+  );
 }

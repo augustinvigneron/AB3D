@@ -8,18 +8,18 @@ export default function ConfidentialitePage() {
   return (
     <LegalPage title="Politique de confidentialité">
       <p>
-        Cette politique explique quelles données Follow IA traite, pourquoi, combien de temps, avec qui elles sont partagées et comment exercer vos droits. Elle
-        s'applique au site et à l'application Follow IA.
+        Cette politique explique quelles données Nexora traite, pourquoi, combien de temps, avec qui elles sont partagées et comment exercer vos droits. Elle
+        s'applique au site et à l'application Nexora.
       </p>
 
       <h2>1. Qui est responsable de vos données ?</h2>
       <p>
-        Le responsable du traitement est <Fill field="editorName" />, <Fill field="editorStatus" />, <Fill field="address" />, SIREN <Fill field="siren" />.
+        Le responsable du traitement est <Fill field="editorName" /><Fill field="editorStatus" optional prefix=", " />, <Fill field="address" />, SIREN <Fill field="siren" />.
       </p>
       <p>
         Pour toute question ou pour exercer vos droits : <Fill field="email" />.
       </p>
-      <p>Follow IA intervient à deux titres différents :</p>
+      <p>Nexora intervient à deux titres différents :</p>
       <ul>
         <li>
           <strong>Responsable de traitement</strong> pour les données de votre compte (identité, connexion, abonnement).
@@ -60,9 +60,9 @@ export default function ConfidentialitePage() {
       <h3>Utilisation de l'assistant de rédaction</h3>
       <p>
         Par défaut, les messages sont rédigés sur nos serveurs à partir de modèles de phrases : <strong>aucune donnée n'est transmise à un service extérieur</strong>{" "}
-        et rien n'est conservé en dehors de votre compte. Si un service d'intelligence artificielle est un jour utilisé pour rédiger les messages, cette politique
-        sera mise à jour avant sa mise en service pour indiquer le prestataire et les données transmises ; nous enregistrons alors la date de chaque génération pour
-        appliquer les limites de votre offre.
+        et les messages proposés ne sont pas conservés. Nous enregistrons seulement la date de chaque génération de messages, pour appliquer les limites de
+        votre offre. Si un service d'intelligence artificielle est un jour utilisé pour rédiger les messages, cette politique sera mise à jour avant sa mise en
+        service pour indiquer le prestataire et les données transmises.
       </p>
 
       <h3>Abonnement et paiement</h3>
@@ -88,7 +88,7 @@ export default function ConfidentialitePage() {
 
       <h2>3. Cookies</h2>
       <p>
-        Follow IA n'utilise que des <strong>cookies strictement nécessaires</strong> : les cookies de session qui vous gardent connecté de manière sécurisée. Ils sont
+        Nexora n'utilise que des <strong>cookies strictement nécessaires</strong> : les cookies de session qui vous gardent connecté de manière sécurisée. Ils sont
         exemptés de consentement (article 82 de la loi Informatique et Libertés), c'est pourquoi aucun bandeau ne vous est demandé.
       </p>
       <p>

@@ -1,6 +1,6 @@
-# Follow IA
+# Nexora
 
-SaaS de suivi client et de relances commerciales pour artisans et indépendants, avec un assistant IA qui rédige les messages (vous relisez, vous envoyez).
+SaaS de suivi client et de relances commerciales pour artisans et indépendants, avec un assistant qui rédige les messages de relance (vous relisez, vous envoyez).
 
 - **Stack** : Next.js 16 (App Router, TypeScript), Tailwind CSS 4, Supabase (auth + Postgres + RLS), API IA configurable côté serveur (Anthropic ou OpenAI), Stripe (préparé, non activé).
 - **Langue** : toute l'interface est en français.
@@ -53,7 +53,7 @@ Le fichier `src/app/auth/callback/route.ts` accepte les deux formats.
 
 Le bouton « Continuer avec Google » apparaît **automatiquement** sur les pages Connexion et Inscription dès que Google est activé dans Supabase (vérification toutes les 5 minutes). Tant que ce n'est pas fait, il reste caché : aucun bouton ne mène à une erreur.
 
-1. **Google Cloud Console** (console.cloud.google.com) → créez un projet → *APIs & Services* → *OAuth consent screen* : type « External », nom « Follow IA », votre email.
+1. **Google Cloud Console** (console.cloud.google.com) → créez un projet → *APIs & Services* → *OAuth consent screen* : type « External », nom « Nexora », votre email.
 2. *Credentials* → *Create credentials* → *OAuth client ID* → type **Web application**.
    - *Authorized redirect URIs* : `https://<votre-projet>.supabase.co/auth/v1/callback` (l'URL exacte est affichée dans Supabase, étape 3).
 3. **Supabase** → *Authentication* → *Sign In / Providers* → **Google** → activez, collez le *Client ID* et le *Client Secret* → Save.
@@ -80,7 +80,7 @@ Le prompt (`src/lib/ai/prompt.ts`) interdit d'inventer montant, date ou promesse
 
 ## 4. Stripe (Billing + Tax)
 
-Follow IA vend un abonnement SaaS mensuel : c'est **Stripe Billing** (Checkout + portail client + webhook). **Stripe Tax** gère la TVA sur vos abonnements, derrière un interrupteur. Stripe Invoicing n'est pas utilisé : les factures de l'abonnement sont générées automatiquement par Billing, et l'application ne facture jamais les clients finaux des artisans.
+Nexora vend un abonnement SaaS mensuel : c'est **Stripe Billing** (Checkout + portail client + webhook). **Stripe Tax** gère la TVA sur vos abonnements, derrière un interrupteur. Stripe Invoicing n'est pas utilisé : les factures de l'abonnement sont générées automatiquement par Billing, et l'application ne facture jamais les clients finaux des artisans.
 
 L'intégration est écrite mais **non testée en conditions réelles** dans ce dépôt. Tant que les variables ne sont pas renseignées, les boutons « Passer à Pro/Business » affichent « Bientôt disponible ». **Le plan payant n'est activé que par le webhook, après vérification de la signature Stripe**, jamais par le retour de Checkout.
 
@@ -143,7 +143,7 @@ Clé `sk_live_`, prix créés depuis le dashboard (le script ne le fait pas volo
 │   │   ├── (auth)/              connexion, inscription, mot de passe oublié, réinitialisation
 │   │   ├── (app)/               espace privé : dashboard, clients, devis, relances,
 │   │   │                        assistant, paramètres, abonnement (+ actions serveur)
-│   │   ├── api/ai/generate/     génération IA (quota vérifié côté serveur)
+│   │   ├── api/ai/generate/     génération de message (quota vérifié côté serveur)
 │   │   ├── api/export/          export JSON des données de l'utilisateur
 │   │   ├── api/stripe/webhook/  activation d'un plan après paiement vérifié
 │   │   ├── auth/callback/       liens email Supabase (confirmation, reset)
@@ -210,7 +210,7 @@ Ces parcours sont écrits selon la documentation à jour des bibliothèques inst
 2. Inscription → email de confirmation → connexion → déconnexion → mot de passe oublié → nouveau mot de passe.
 3. Avec **deux comptes** : vérifier qu'un compte ne voit jamais les clients/devis/relances de l'autre (y compris en forgeant une URL `/clients/<id de l'autre>` → 404).
 4. Créer 10 clients en offre gratuite, tenter le 11e : message de limite, aucune insertion.
-5. Lancer 5 générations IA (simulation ou réelle), tenter la 6e : refus 429, compteur correct ; vérifier la remise à zéro le mois suivant (ou en modifiant `created_at` en base).
+5. Lancer 5 générations de messages (simulation ou réelle), tenter la 6e : refus 429, compteur correct ; vérifier la remise à zéro le mois suivant (ou en modifiant `created_at` en base).
 6. Avec une vraie clé IA : vérifier que les trois variantes n'inventent ni montant ni date quand le champ devis est vide.
 7. Relances : créer, modifier, terminer (le dernier contact du client doit se mettre à jour), rouvrir, supprimer ; vérifier l'historique.
 8. Export JSON : le fichier contient bien toutes les données et uniquement les siennes.

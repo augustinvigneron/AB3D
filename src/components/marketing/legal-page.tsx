@@ -29,10 +29,13 @@ const FIELD_LABELS: Record<LegalField, string> = {
   courtCity: "ville du siège",
 };
 
-/** Affiche une information légale (src/lib/legal.ts) ou un encadré « À compléter ». */
-export function Fill({ field }: { field: LegalField }) {
+/**
+ * Affiche une information légale (src/lib/legal.ts) ou un encadré « À compléter ».
+ * `optional` : si le champ est vide, rien n'est affiché (pas même le préfixe).
+ */
+export function Fill({ field, optional, prefix = "" }: { field: LegalField; optional?: boolean; prefix?: string }) {
   const value = LEGAL[field].trim();
-  if (!value) return <Placeholder>{FIELD_LABELS[field]}</Placeholder>;
-  if (field === "email") return <a href={`mailto:${value}`}>{value}</a>;
-  return <>{value}</>;
+  if (!value) return optional ? null : <>{prefix}<Placeholder>{FIELD_LABELS[field]}</Placeholder></>;
+  if (field === "email") return <>{prefix}<a href={`mailto:${value}`}>{value}</a></>;
+  return <>{prefix}{value}</>;
 }

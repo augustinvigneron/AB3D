@@ -1,22 +1,19 @@
 import Link from "next/link";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
+/** Icône Nexora (fichier public/brand/nexora-icone-512.png). */
 export function LogoMark({ className }: { className?: string }) {
   return (
-    <span
-      className={cn(
-        "flex size-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-brand to-[#a78bfa] text-white shadow-[0_6px_18px_-6px_rgb(124_92_255/0.9)]",
-        className,
-      )}
+    <Image
+      src="/brand/nexora-icone-512.png"
+      alt=""
       aria-hidden
-    >
-      <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4 12a8 8 0 0 1 13.66-5.66" />
-        <path d="M20 12a8 8 0 0 1-13.66 5.66" />
-        <path d="M18 3v4h-4" />
-        <path d="M6 21v-4h4" />
-      </svg>
-    </span>
+      width={32}
+      height={32}
+      priority
+      className={cn("size-8 shrink-0 rounded-lg shadow-[0_6px_18px_-6px_rgb(217_70_239/0.7)]", className)}
+    />
   );
 }
 
@@ -24,9 +21,7 @@ export function Logo({ href = "/", className }: { href?: string; className?: str
   return (
     <Link href={href} className={cn("flex items-center gap-2.5 font-semibold tracking-tight", className)}>
       <LogoMark />
-      <span className="text-[15px]">
-        Follow<span className="ml-1 text-brand">IA</span>
-      </span>
+      <span className="text-[15px]">Nexora</span>
     </Link>
   );
 }

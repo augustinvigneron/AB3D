@@ -18,7 +18,7 @@ const FEATURES = [
 
 const FAQ = [
   {
-    q: "Follow IA envoie-t-il les messages à ma place ?",
+    q: "Nexora envoie-t-il les messages à ma place ?",
     a: "Non. L'assistant rédige des propositions ; vous les copiez dans votre messagerie ou votre téléphone après relecture. Aucun envoi automatique n'est programmé.",
   },
   {
@@ -53,7 +53,7 @@ export default function LandingPage() {
               Ne laissez plus un devis <span className="bg-gradient-to-r from-brand to-[#a78bfa] bg-clip-text text-transparent">sans réponse</span>.
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-lg text-fg-muted">
-              Vous envoyez des devis, puis le chantier reprend et vous oubliez de relancer. Follow IA garde la liste à jour, vous dit qui relancer aujourd'hui et
+              Vous envoyez des devis, puis le chantier reprend et vous oubliez de relancer. Nexora garde la liste à jour, vous dit qui relancer aujourd'hui et
               rédige le message avec vous.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">

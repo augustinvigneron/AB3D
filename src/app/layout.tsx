@@ -8,11 +8,11 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 
 export const metadata: Metadata = {
   title: {
-    default: "Follow IA — Ne ratez plus aucune relance client",
-    template: "%s · Follow IA",
+    default: "Nexora — Ne ratez plus aucune relance client",
+    template: "%s · Nexora",
   },
   description:
-    "Follow IA aide les artisans et indépendants à suivre leurs clients, leurs devis et à rédiger leurs relances avec l'aide de l'IA.",
+    "Nexora aide les artisans et indépendants à suivre leurs clients, leurs devis et à rédiger leurs relances en quelques secondes.",
 };
 
 export const viewport: Viewport = {

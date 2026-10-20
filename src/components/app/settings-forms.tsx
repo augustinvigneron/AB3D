@@ -27,7 +27,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
         <Field label="Votre nom" name="full_name" error={errors.full_name} required>
           <Input id="full_name" name="full_name" required maxLength={120} defaultValue={profile.full_name ?? ""} />
         </Field>
-        <Field label="Nom de l'entreprise" name="company_name" error={errors.company_name} hint="Utilisé dans la signature des messages IA">
+        <Field label="Nom de l'entreprise" name="company_name" error={errors.company_name} hint="Utilisé dans la signature des messages">
           <Input id="company_name" name="company_name" maxLength={120} defaultValue={profile.company_name ?? ""} />
         </Field>
       </div>

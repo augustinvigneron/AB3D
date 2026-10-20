@@ -22,7 +22,7 @@ export const PLANS: Record<PlanId, Plan> = {
     priceMonthly: 0,
     maxClients: 10,
     maxAiGenerationsPerMonth: 5,
-    features: ["Jusqu'à 10 clients", "Suivi des devis et relances", "5 générations IA par mois", "Export de vos données"],
+    features: ["Jusqu'à 10 clients", "Suivi des devis et relances", "5 générations de messages par mois", "Export de vos données"],
   },
   pro: {
     id: "pro",
@@ -30,7 +30,7 @@ export const PLANS: Record<PlanId, Plan> = {
     priceMonthly: 12,
     maxClients: null,
     maxAiGenerationsPerMonth: 100,
-    features: ["Clients illimités", "Suivi des devis et relances", "100 générations IA par mois", "Export de vos données", "Support par email"],
+    features: ["Clients illimités", "Suivi des devis et relances", "100 générations de messages par mois", "Export de vos données", "Support par email"],
   },
   business: {
     id: "business",
@@ -38,7 +38,7 @@ export const PLANS: Record<PlanId, Plan> = {
     priceMonthly: 24,
     maxClients: null,
     maxAiGenerationsPerMonth: 300,
-    features: ["Clients illimités", "Suivi des devis et relances", "300 générations IA par mois", "Export de vos données", "Support prioritaire"],
+    features: ["Clients illimités", "Suivi des devis et relances", "300 générations de messages par mois", "Export de vos données", "Support prioritaire"],
   },
 };
 
@@ -58,7 +58,7 @@ export function canAddClient(planId: PlanId, currentCount: number): boolean {
   return limit === null || currentCount < limit;
 }
 
-/** Vérifie si une génération IA supplémentaire est autorisée ce mois-ci. */
+/** Vérifie si une génération de message supplémentaire est autorisée ce mois-ci. */
 export function canGenerate(planId: PlanId, usedThisMonth: number): boolean {
   return usedThisMonth < PLANS[planId].maxAiGenerationsPerMonth;
 }

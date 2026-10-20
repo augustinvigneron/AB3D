@@ -35,7 +35,7 @@ export async function GET() {
   return new NextResponse(JSON.stringify(payload, null, 2), {
     headers: {
       "content-type": "application/json; charset=utf-8",
-      "content-disposition": `attachment; filename="follow-ia-export-${date}.json"`,
+      "content-disposition": `attachment; filename="nexora-export-${date}.json"`,
       "cache-control": "no-store",
     },
   });

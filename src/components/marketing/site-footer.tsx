@@ -7,7 +7,7 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:px-6 md:flex-row md:items-start md:justify-between">
         <div className="max-w-xs">
           <Logo />
-          <p className="mt-3 text-sm text-fg-muted">Le suivi client et les relances des artisans et indépendants, avec un coup de pouce de l'IA.</p>
+          <p className="mt-3 text-sm text-fg-muted">Le suivi client et les relances des artisans et indépendants, avec des messages prêts à envoyer.</p>
         </div>
         <nav aria-label="Liens légaux" className="grid grid-cols-2 gap-x-10 gap-y-2 text-sm text-fg-muted">
           <Link href="/#fonctionnalites" className="hover:text-fg">
@@ -30,7 +30,7 @@ export function SiteFooter() {
           </Link>
         </nav>
       </div>
-      <p className="border-t border-border/60 py-4 text-center text-xs text-fg-subtle">© {new Date().getFullYear()} Follow IA. Tous droits réservés.</p>
+      <p className="border-t border-border/60 py-4 text-center text-xs text-fg-subtle">© {new Date().getFullYear()} Nexora. Tous droits réservés.</p>
     </footer>
   );
 }

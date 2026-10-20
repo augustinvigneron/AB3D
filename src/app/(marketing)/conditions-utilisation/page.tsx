@@ -9,14 +9,14 @@ export default function ConditionsPage() {
     <LegalPage title="Conditions générales d'utilisation">
       <h2>1. Objet et acceptation</h2>
       <p>
-        Les présentes conditions encadrent l'utilisation du service Follow IA, édité par <Fill field="editorName" /> (voir les{" "}
+        Les présentes conditions encadrent l'utilisation du service Nexora, édité par <Fill field="editorName" /> (voir les{" "}
         <Link href="/mentions-legales">mentions légales</Link>). En créant un compte, vous les acceptez sans réserve. Si vous n'êtes pas d'accord, n'utilisez pas le
         service.
       </p>
 
       <h2>2. Un service destiné aux professionnels</h2>
       <p>
-        Follow IA s'adresse aux professionnels — artisans, indépendants, très petites entreprises — qui l'utilisent pour leur activité. En vous inscrivant, vous
+        Nexora s'adresse aux professionnels — artisans, indépendants, très petites entreprises — qui l'utilisent pour leur activité. En vous inscrivant, vous
         déclarez agir à des fins professionnelles. Le service n'est pas destiné aux particuliers agissant pour leurs besoins personnels.
       </p>
 
@@ -31,7 +31,7 @@ export default function ConditionsPage() {
       </ul>
 
       <h2>4. Description du service</h2>
-      <p>Follow IA vous permet notamment :</p>
+      <p>Nexora vous permet notamment :</p>
       <ul>
         <li>de tenir un fichier de clients et de prospects ;</li>
         <li>
@@ -50,8 +50,8 @@ export default function ConditionsPage() {
       <h2>5. Offres, prix et paiement</h2>
       <ul>
         <li>
-          Une <strong>offre gratuite</strong> est proposée, avec les limites indiquées sur la page <Link href="/#tarifs">Tarifs</Link> (notamment le nombre de
-          clients).
+          Une <strong>offre gratuite</strong> est proposée, avec les limites indiquées sur la page <Link href="/#tarifs">Tarifs</Link> (nombre de clients et
+          nombre de générations de messages par mois).
         </li>
         <li>
           Les <strong>offres payantes</strong> sont des abonnements mensuels, au prix affiché sur la page Tarifs au moment de la souscription. Le paiement est
@@ -83,7 +83,7 @@ export default function ConditionsPage() {
 
       <h2>7. Les données de vos clients (sous-traitance)</h2>
       <p>
-        Pour les données de vos clients et prospects que vous enregistrez, <strong>vous êtes le responsable de traitement</strong> et Follow IA agit en tant que{" "}
+        Pour les données de vos clients et prospects que vous enregistrez, <strong>vous êtes le responsable de traitement</strong> et Nexora agit en tant que{" "}
         <strong>sous-traitant</strong> au sens de l'article 28 du RGPD. À ce titre, l'éditeur s'engage à :
       </p>
       <ul>

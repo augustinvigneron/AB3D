@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Crée (ou retrouve) les produits et prix Stripe de Follow IA, puis affiche
+ * Crée (ou retrouve) les produits et prix Stripe de Nexora, puis affiche
  * les variables d'environnement à copier dans .env.local.
  *
  * Usage (depuis la racine du projet, avec votre clé de TEST) :
@@ -24,8 +24,8 @@ if (!key.startsWith("sk_test_")) {
 const stripe = new Stripe(key);
 
 const PLANS = [
-  { lookupKey: "followia_pro_monthly", name: "Follow IA — Pro", description: "Clients illimités, 100 générations IA par mois.", amount: 1200, env: "STRIPE_PRICE_PRO" },
-  { lookupKey: "followia_business_monthly", name: "Follow IA — Business", description: "Clients illimités, 300 générations IA par mois, support prioritaire.", amount: 2400, env: "STRIPE_PRICE_BUSINESS" },
+  { lookupKey: "nexora_pro_monthly", name: "Nexora — Pro", description: "Clients illimités, 100 générations de messages par mois.", amount: 1200, env: "STRIPE_PRICE_PRO" },
+  { lookupKey: "nexora_business_monthly", name: "Nexora — Business", description: "Clients illimités, 300 générations de messages par mois, support prioritaire.", amount: 2400, env: "STRIPE_PRICE_BUSINESS" },
 ];
 
 const envLines = [];

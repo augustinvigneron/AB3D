@@ -19,7 +19,7 @@ type AiAssistantProps = {
   /** "ai" : un fournisseur d'IA est configuré ; "templates" : rédaction par modèles, sans IA. */
   mode: "ai" | "templates";
   providerLabel: string | null;
-  /** Quota mensuel, uniquement en mode IA. */
+  /** Quota mensuel de générations de messages (selon l'offre). */
   initialQuota: Quota | null;
   quotes: AssistantQuote[];
   defaults: { clientName: string; quoteId: string; quoteInfo: string; senderName: string; companyName: string };
@@ -113,8 +113,8 @@ export function AiAssistant({ mode, providerLabel, initialQuota, quotes, default
           <div className="mb-4 flex items-start gap-2 rounded-lg border border-info/30 bg-info-soft px-3 py-2 text-xs">
             <ShieldCheck className="mt-0.5 size-4 shrink-0 text-info" />
             <p>
-              Les messages sont rédigés à partir de <strong>modèles éprouvés</strong>, complétés avec vos informations. Illimité, et aucune donnée n'est
-              envoyée à un service extérieur.
+              Les messages sont rédigés à partir de <strong>modèles éprouvés</strong>, complétés avec vos informations. Aucune donnée n'est envoyée à
+              un service extérieur.
             </p>
           </div>
         )}
@@ -193,12 +193,11 @@ export function AiAssistant({ mode, providerLabel, initialQuota, quotes, default
 
           <Button type="submit" className="w-full" loading={loading} disabled={quotaLeft === 0}>
             {isAi ? <Sparkles className="size-4" /> : <PenLine className="size-4" />}
-            {quotaLeft === 0 ? "Quota mensuel atteint" : "Rédiger 3 propositions"}
+            {quotaLeft === 0 ? "Quota mensuel atteint — passez à l'offre supérieure" : "Rédiger 3 propositions"}
           </Button>
           <p className="text-xs text-fg-subtle">
-            {isAi
-              ? `${providerLabel ? `Génération via ${providerLabel}. ` : ""}Chaque génération compte pour 1 dans votre quota mensuel. `
-              : ""}
+            {isAi && providerLabel ? `Génération via ${providerLabel}. ` : ""}
+            Chaque génération (y compris « Autres formulations ») compte pour 1 dans votre quota mensuel.
             Aucun message n'est envoyé automatiquement : vous relisez, modifiez et envoyez vous-même.
           </p>
           {!defaults.senderName && (
