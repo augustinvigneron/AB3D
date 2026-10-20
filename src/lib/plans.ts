@@ -34,7 +34,7 @@ export const PLANS: Record<PlanId, Plan> = {
     maxClients: 300,
     maxAiGenerationsPerMonth: 100,
     googleShortcuts: false,
-    features: ["Jusqu'à 300 clients", "Suivi des devis et relances", "100 générations de messages par mois", "Export de vos données", "Support par email"],
+    features: ["Jusqu'à 300 clients", "Suivi des devis et relances", "100 générations de messages par mois", "Export des données", "Support par email"],
   },
   business: {
     id: "business",
@@ -48,7 +48,7 @@ export const PLANS: Record<PlanId, Plan> = {
       "Suivi des devis et relances",
       "Générations de messages illimitées",
       "Envoi via Gmail et rappels dans Google Agenda en 1 clic",
-      "Export de vos données",
+      "Export des données",
       "Support prioritaire",
     ],
   },
