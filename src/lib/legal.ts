@@ -19,7 +19,7 @@ export const LEGAL = {
   /** Email de contact, utilisé aussi pour les demandes RGPD. */
   email: "augustinvigneron767@gmail.com",
   /** Directeur de la publication (en général l'entrepreneur ou le président de la société). */
-  publicationDirector: "",
+  publicationDirector: "Augustin Vigneron",
   /** Région du projet Supabase (Supabase → Project Settings → General). Ex. : « Union européenne (Paris) ». */
   databaseRegion: "États-Unis (Virginie du Nord, us-east-1)",
   /** Ville du siège, pour la juridiction compétente. */
