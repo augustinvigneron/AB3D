@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Sparkles, Copy, RefreshCw, Pencil, Check, AlertCircle, PenLine, Info, ShieldCheck } from "lucide-react";
+import Link from "next/link";
+import { Sparkles, Copy, RefreshCw, Pencil, Check, AlertCircle, PenLine, Info, ShieldCheck, Mail, Lock } from "lucide-react";
+import { gmailComposeUrl } from "@/lib/google-links";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
@@ -11,9 +13,9 @@ import { MESSAGE_TYPES, MESSAGE_TYPE_LABELS, TONES, TONE_LABELS, type FieldError
 import type { AiVariant } from "@/lib/ai/prompt";
 import { formatDate, formatEuro } from "@/lib/utils";
 
-type Quota = { used: number; limit: number; plan: string };
+type Quota = { used: number; limit: number | null; plan: string };
 
-export type AssistantQuote = { id: string; title: string; amount: number; sentAt: string | null; clientName: string | null };
+export type AssistantQuote = { id: string; title: string; amount: number; sentAt: string | null; clientName: string | null; clientEmail: string | null };
 
 type AiAssistantProps = {
   /** "ai" : un fournisseur d'IA est configuré ; "templates" : rédaction par modèles, sans IA. */
@@ -22,10 +24,12 @@ type AiAssistantProps = {
   /** Quota mensuel de générations de messages (selon l'offre). */
   initialQuota: Quota | null;
   quotes: AssistantQuote[];
+  /** Offre Business : bouton « Ouvrir dans Gmail ». */
+  googleShortcuts?: boolean;
   defaults: { clientName: string; quoteId: string; quoteInfo: string; senderName: string; companyName: string };
 };
 
-export function AiAssistant({ mode, providerLabel, initialQuota, quotes, defaults }: AiAssistantProps) {
+export function AiAssistant({ mode, providerLabel, initialQuota, quotes, googleShortcuts = false, defaults }: AiAssistantProps) {
   const isAi = mode === "ai";
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +45,7 @@ export function AiAssistant({ mode, providerLabel, initialQuota, quotes, default
   const { toast } = useToast();
 
   const selectedQuote = quotes.find((q) => q.id === quoteId) ?? null;
-  const quotaLeft = quota ? Math.max(0, quota.limit - quota.used) : Infinity;
+  const quotaLeft = quota && quota.limit !== null ? Math.max(0, quota.limit - quota.used) : Infinity;
 
   function onQuoteChange(id: string) {
     setQuoteId(id);
@@ -104,7 +108,7 @@ export function AiAssistant({ mode, providerLabel, initialQuota, quotes, default
           <h2 className="text-base font-semibold">Votre demande</h2>
           {quota && (
             <Badge tone={quotaLeft === 0 ? "danger" : "brand"}>
-              {quota.used}/{quota.limit} ce mois
+              {quota.limit === null ? `${quota.used} ce mois · illimité` : `${quota.used}/${quota.limit} ce mois`}
             </Badge>
           )}
         </div>
@@ -237,7 +241,12 @@ export function AiAssistant({ mode, providerLabel, initialQuota, quotes, default
               </Button>
             </div>
             {variants.map((v) => (
-              <VariantCard key={`${v.style}-${generation}`} variant={v} onCopied={() => toast("Message copié dans le presse-papiers.", "success")} />
+              <VariantCard
+                key={`${v.style}-${generation}`}
+                variant={v}
+                gmail={googleShortcuts ? { to: selectedQuote?.clientEmail ?? null } : null}
+                onCopied={() => toast("Message copié dans le presse-papiers.", "success")}
+              />
             ))}
           </>
         )}
@@ -246,7 +255,7 @@ export function AiAssistant({ mode, providerLabel, initialQuota, quotes, default
   );
 }
 
-function VariantCard({ variant, onCopied }: { variant: AiVariant; onCopied: () => void }) {
+function VariantCard({ variant, gmail, onCopied }: { variant: AiVariant; gmail: { to: string | null } | null; onCopied: () => void }) {
   const [editing, setEditing] = useState(false);
   const [subject, setSubject] = useState(variant.subject);
   const [body, setBody] = useState(variant.body);
@@ -277,6 +286,25 @@ function VariantCard({ variant, onCopied }: { variant: AiVariant; onCopied: () =
           <Button variant="secondary" size="sm" onClick={copy}>
             {copied ? <Check className="size-4 text-success" /> : <Copy className="size-4" />} Copier
           </Button>
+          {gmail ? (
+            <a
+              href={gmailComposeUrl({ to: gmail.to, subject, body })}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-8 items-center gap-2 rounded-lg bg-brand px-3 text-xs font-medium text-brand-fg hover:bg-brand-hover"
+              title="Ouvre Gmail avec le message pré-rempli : vous relisez et cliquez sur Envoyer"
+            >
+              <Mail className="size-4" /> Gmail
+            </a>
+          ) : (
+            <Link
+              href="/parametres/abonnement"
+              className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border px-2.5 text-xs text-fg-subtle hover:text-fg"
+              title="Ouvrir dans Gmail — disponible avec l'offre Business"
+            >
+              <Lock className="size-3.5" /> Gmail
+            </Link>
+          )}
         </div>
       </div>
       {editing ? (

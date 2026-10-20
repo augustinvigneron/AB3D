@@ -19,7 +19,7 @@ const FEATURES = [
 const FAQ = [
   {
     q: "Nexora envoie-t-il les messages à ma place ?",
-    a: "Non. L'assistant rédige des propositions ; vous les copiez dans votre messagerie ou votre téléphone après relecture. Aucun envoi automatique n'est programmé.",
+    a: "Non. L'assistant rédige des propositions ; vous les copiez dans votre messagerie ou votre téléphone après relecture. Avec l'offre Business, un bouton ouvre Gmail avec le message déjà rempli : c'est toujours vous qui cliquez sur « Envoyer ». Aucun envoi automatique n'est programmé.",
   },
   {
     q: "Les messages peuvent-ils contenir un montant ou une date inventés ?",

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { BellRing, AlertTriangle, CalendarCheck, CalendarDays, History, CheckCircle2 } from "lucide-react";
 import { requireUser } from "@/lib/auth";
+import { getProfile } from "@/lib/data/profile";
+import { getPlan } from "@/lib/plans";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -20,9 +22,9 @@ const SORTS = [
   { value: "desc", label: "Plus récentes d'abord" },
 ];
 
-type SectionProps = { title: string; icon: typeof BellRing; items: ReminderRow[]; tone: string; clients: ReminderClientOption[]; quotes: ReminderQuoteOption[] };
+type SectionProps = { title: string; icon: typeof BellRing; items: ReminderRow[]; tone: string; clients: ReminderClientOption[]; quotes: ReminderQuoteOption[]; googleShortcuts: boolean };
 
-function Section({ title, icon: Icon, items, tone, clients, quotes }: SectionProps) {
+function Section({ title, icon: Icon, items, tone, clients, quotes, googleShortcuts }: SectionProps) {
   return (
     <Card>
       <div className="flex items-center justify-between">
@@ -38,7 +40,7 @@ function Section({ title, icon: Icon, items, tone, clients, quotes }: SectionPro
       ) : (
         <ul className="mt-2 divide-y divide-border">
           {items.map((r) => (
-            <ReminderItem key={r.id} reminder={r} clients={clients} quotes={quotes} />
+            <ReminderItem key={r.id} reminder={r} clients={clients} quotes={quotes} googleShortcuts={googleShortcuts} />
           ))}
         </ul>
       )}
@@ -63,12 +65,14 @@ export default async function RemindersPage({ searchParams }: PageProps<"/relanc
   if (canal) query = query.eq("channel", canal);
   if (q) query = query.ilike("title", `%${q.replace(/[%,()]/g, " ")}%`);
 
-  const [{ data, error }, { data: clients }, { data: quotes }, { data: events }] = await Promise.all([
+  const [{ data, error }, { data: clients }, { data: quotes }, { data: events }, profile] = await Promise.all([
     query,
     session.supabase.from("clients").select("id, name, company").eq("user_id", session.user.id).order("name"),
     session.supabase.from("quotes").select("id, title, client_id").eq("user_id", session.user.id).order("created_at", { ascending: false }),
     session.supabase.from("reminder_events").select("*").eq("user_id", session.user.id).order("created_at", { ascending: false }).limit(15),
+    getProfile(session),
   ]);
+  const plan = getPlan(profile.plan);
 
   const reminders = (data ?? []) as unknown as ReminderRow[];
   const today = todayISO();
@@ -117,12 +121,12 @@ export default async function RemindersPage({ searchParams }: PageProps<"/relanc
           description={showDone ? "Les relances terminées apparaîtront ici." : "Planifiez votre première relance : vous la retrouverez ici le jour J."}
         />
       ) : showDone ? (
-        <Section title="Relances terminées" icon={CheckCircle2} items={reminders} tone="text-success" clients={clientOptions} quotes={quoteOptions} />
+        <Section title="Relances terminées" icon={CheckCircle2} items={reminders} tone="text-success" clients={clientOptions} quotes={quoteOptions} googleShortcuts={plan.googleShortcuts} />
       ) : (
         <div className="space-y-5">
-          <Section title="Aujourd'hui" icon={CalendarCheck} items={dueToday} tone="text-warning" clients={clientOptions} quotes={quoteOptions} />
-          <Section title="En retard" icon={AlertTriangle} items={overdue} tone="text-danger" clients={clientOptions} quotes={quoteOptions} />
-          <Section title="À venir" icon={CalendarDays} items={upcoming} tone="text-info" clients={clientOptions} quotes={quoteOptions} />
+          <Section title="Aujourd'hui" icon={CalendarCheck} items={dueToday} tone="text-warning" clients={clientOptions} quotes={quoteOptions} googleShortcuts={plan.googleShortcuts} />
+          <Section title="En retard" icon={AlertTriangle} items={overdue} tone="text-danger" clients={clientOptions} quotes={quoteOptions} googleShortcuts={plan.googleShortcuts} />
+          <Section title="À venir" icon={CalendarDays} items={upcoming} tone="text-info" clients={clientOptions} quotes={quoteOptions} googleShortcuts={plan.googleShortcuts} />
         </div>
       )}
 

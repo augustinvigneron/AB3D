@@ -141,7 +141,7 @@ export type Database = {
     Functions: {
       consume_ai_generation: {
         Args: { p_simulated: boolean };
-        Returns: { allowed: boolean; used: number; limit_value: number; plan: PlanId };
+        Returns: { allowed: boolean; used: number; limit_value: number | null; plan: PlanId };
       };
       ai_usage_this_month: {
         Args: Record<string, never>;

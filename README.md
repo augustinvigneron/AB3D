@@ -26,6 +26,7 @@ Ouvrez <http://localhost:3000>.
 
 1. Créez un projet sur <https://supabase.com> (offre gratuite suffisante).
 2. Dans le tableau de bord : **SQL Editor → New query**, collez le contenu de `supabase/migrations/0001_init.sql`, puis **Run**. Cela crée les tables, les déclencheurs, les quotas et les politiques RLS.
+   Exécutez ensuite, de la même façon et dans l'ordre, `0002_stripe.sql` puis `0003_offres.sql` (limites des offres : Gratuit 10 clients / 5 générations, Pro 300 / 100, Business illimité).
 3. **Settings → API** : copiez l'URL du projet et la clé publique (« publishable » `sb_publishable_…`, ou l'ancienne clé « anon » — les deux fonctionnent).
 4. Dans `.env.local` :
    ```
@@ -65,9 +66,13 @@ Le premier clic sur le bouton crée le compte (le nom vient du profil Google) ; 
 
 ## 3. Assistant de rédaction (sans IA par défaut)
 
-**Sans aucune configuration**, l'assistant rédige trois messages (professionnel, amical, court) à partir de modèles de phrases écrits à la main (`src/lib/ai/templates.ts`), complétés avec les informations réelles : client, titre, montant et date d'envoi du devis choisi, phrase personnelle, signature (Paramètres). Gratuit, illimité, sans quota, aucune donnée envoyée à l'extérieur, et rien n'est inventé (testé). « Autres formulations » fait varier les phrases.
+**Sans aucune configuration**, l'assistant rédige trois messages (professionnel, amical, court) à partir de modèles de phrases écrits à la main (`src/lib/ai/templates.ts`), complétés avec les informations réelles : client, titre, montant et date d'envoi du devis choisi, phrase personnelle, signature (Paramètres). Aucun coût, aucune donnée envoyée à l'extérieur, et rien n'est inventé (testé). « Autres formulations » fait varier les phrases.
 
-**Optionnel : brancher une IA.** Si `AI_API_KEY` est renseignée, l'IA prend le relais automatiquement (avec quota mensuel par offre). Fournisseurs compatibles :
+Chaque génération compte dans le quota mensuel de l'offre (Gratuit 5, Pro 100, Business illimité).
+
+En offre **Business**, chaque message a un bouton « Gmail » (fenêtre de rédaction Gmail pré-remplie) et chaque relance un bouton « Google Agenda » (événement pré-rempli). Ce sont de simples liens : aucune API Google, aucun accès à la boîte mail ou à l'agenda, l'utilisateur clique lui-même sur « Envoyer » / « Enregistrer ».
+
+**Optionnel : brancher une IA.** Si `AI_API_KEY` est renseignée, l'IA prend le relais automatiquement (même quota mensuel). Fournisseurs compatibles :
 
 ```
 AI_PROVIDER=anthropic        # ou openai (pour tout fournisseur compatible OpenAI)

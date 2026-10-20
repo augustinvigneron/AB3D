@@ -17,7 +17,7 @@ export default async function AssistantPage({ searchParams }: PageProps<"/assist
     searchParams,
     session.supabase
       .from("quotes")
-      .select("id, title, amount, sent_at, status, client:clients(name)")
+      .select("id, title, amount, sent_at, status, client:clients(name, email)")
       .eq("user_id", session.user.id)
       .in("status", ["envoye", "en_attente", "brouillon"])
       .order("created_at", { ascending: false })
@@ -26,12 +26,13 @@ export default async function AssistantPage({ searchParams }: PageProps<"/assist
   ]);
   const plan = getPlan(profile.plan);
 
-  const quotes: AssistantQuote[] = ((quotesRes.data ?? []) as unknown as Array<{ id: string; title: string; amount: number; sent_at: string | null; client: { name: string } | null }>).map((q) => ({
+  const quotes: AssistantQuote[] = ((quotesRes.data ?? []) as unknown as Array<{ id: string; title: string; amount: number; sent_at: string | null; client: { name: string; email: string | null } | null }>).map((q) => ({
     id: q.id,
     title: q.title,
     amount: Number(q.amount),
     sentAt: q.sent_at,
     clientName: q.client?.name ?? null,
+    clientEmail: q.client?.email ?? null,
   }));
 
   // ?devis= peut être l'identifiant d'un devis (lien depuis une relance) ; sinon il est repris comme texte libre.
@@ -51,6 +52,7 @@ export default async function AssistantPage({ searchParams }: PageProps<"/assist
         providerLabel={cfg ? `${providerName(cfg)} (${cfg.model})` : null}
         initialQuota={{ used, limit: plan.maxAiGenerationsPerMonth, plan: plan.id }}
         quotes={quotes}
+        googleShortcuts={plan.googleShortcuts}
         defaults={{
           clientName: typeof params.client === "string" ? params.client.slice(0, 120) : (matchedQuote?.clientName ?? ""),
           quoteId: matchedQuote?.id ?? "",

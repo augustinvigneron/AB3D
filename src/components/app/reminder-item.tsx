@@ -3,7 +3,8 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Check, Pencil, RotateCcw, Mail, Phone, MessageSquare, MapPin, MoreHorizontal, Sparkles } from "lucide-react";
+import { Check, Pencil, RotateCcw, Mail, Phone, MessageSquare, MapPin, MoreHorizontal, Sparkles, CalendarPlus } from "lucide-react";
+import { googleCalendarUrl } from "@/lib/google-links";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/toast";
 import { DeleteButton } from "./delete-button";
@@ -30,9 +31,11 @@ type ReminderItemProps = {
   reminder: ReminderRow;
   clients: ReminderClientOption[];
   quotes: ReminderQuoteOption[];
+  /** Offre Business : bouton « Ajouter à Google Agenda ». */
+  googleShortcuts?: boolean;
 };
 
-export function ReminderItem({ reminder, clients, quotes }: ReminderItemProps) {
+export function ReminderItem({ reminder, clients, quotes, googleShortcuts = false }: ReminderItemProps) {
   const [editing, setEditing] = useState(false);
   const [editKey, setEditKey] = useState(0);
   const [pending, startTransition] = useTransition();
@@ -108,6 +111,34 @@ export function ReminderItem({ reminder, clients, quotes }: ReminderItemProps) {
             <Sparkles className="size-4 text-brand" />
           </Link>
         )}
+        {!done &&
+          (googleShortcuts ? (
+            <a
+              href={googleCalendarUrl({
+                title: reminder.client ? `${reminder.title} — ${reminder.client.name}` : reminder.title,
+                date: reminder.due_at,
+                details: [`Relance (${REMINDER_CHANNEL_LABELS[reminder.channel]})`, reminder.quote ? `Devis : ${reminder.quote.title}` : "", reminder.notes ?? ""]
+                  .filter(Boolean)
+                  .join("\n"),
+              })}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden rounded-lg p-2 text-fg-muted hover:bg-surface-2 hover:text-fg sm:block"
+              aria-label="Ajouter à Google Agenda"
+              title="Ajouter à Google Agenda"
+            >
+              <CalendarPlus className="size-4" />
+            </a>
+          ) : (
+            <Link
+              href="/parametres/abonnement"
+              className="hidden rounded-lg p-2 text-fg-subtle opacity-60 hover:bg-surface-2 hover:opacity-100 sm:block"
+              aria-label="Ajouter à Google Agenda : disponible avec l'offre Business"
+              title="Ajouter à Google Agenda — offre Business"
+            >
+              <CalendarPlus className="size-4" />
+            </Link>
+          ))}
         {done ? (
           <button type="button" onClick={toggle} disabled={pending} className="rounded-lg p-2 text-fg-muted hover:bg-surface-2 hover:text-fg" aria-label="Rouvrir">
             <RotateCcw className="size-4" />

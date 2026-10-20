@@ -119,6 +119,11 @@ export default function ConfidentialitePage() {
         <li>
           <strong>Google</strong> : connexion avec un compte Google, uniquement si vous choisissez cette option.
         </li>
+        <li>
+          <strong>Gmail et Google Agenda</strong> (offre Business) : les boutons « Gmail » et « Google Agenda » ouvrent simplement une page Google dans votre
+          navigateur, pré-remplie avec le message ou la relance concernée (nom, adresse email du client, texte). Ce contenu est transmis à Google depuis votre
+          propre compte, au moment où vous cliquez. Nexora n'a <strong>aucun accès</strong> à votre boîte mail ni à votre agenda et n'envoie rien à votre place.
+        </li>
       </ul>
       <p>
         Certains de ces prestataires sont établis aux États-Unis ou y ont une société mère. Ces transferts hors de l'Union européenne sont encadrés par les clauses

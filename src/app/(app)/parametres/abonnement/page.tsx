@@ -67,7 +67,8 @@ export default async function SubscriptionPage({ searchParams }: PageProps<"/par
             <div>
               <dt className="text-fg-subtle">Générations de messages ce mois</dt>
               <dd className="font-medium tabular-nums">
-                {typeof used === "number" ? used : 0} / {current.maxAiGenerationsPerMonth}
+                {typeof used === "number" ? used : 0}
+                {current.maxAiGenerationsPerMonth === null ? " (illimité)" : ` / ${current.maxAiGenerationsPerMonth}`}
               </dd>
             </div>
           </dl>

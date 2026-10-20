@@ -45,7 +45,7 @@ export async function POST(request: Request) {
   ]);
   const plan = getPlan(profile?.plan);
   const usedCount = typeof used === "number" ? used : 0;
-  if (usedCount >= plan.maxAiGenerationsPerMonth) {
+  if (plan.maxAiGenerationsPerMonth !== null && usedCount >= plan.maxAiGenerationsPerMonth) {
     return NextResponse.json(
       { error: `Quota atteint : ${usedCount}/${plan.maxAiGenerationsPerMonth} générations de messages ce mois-ci sur l'offre ${plan.name}.`, quota: { used: usedCount, limit: plan.maxAiGenerationsPerMonth, plan: plan.id } },
       { status: 429 },

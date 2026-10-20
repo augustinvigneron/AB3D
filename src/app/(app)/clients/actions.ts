@@ -23,7 +23,7 @@ export async function createClientAction(_prev: ClientActionState, formData: For
   if (!canAddClient(plan.id, count ?? 0)) {
     return {
       ok: false,
-      message: `Votre offre ${plan.name} est limitée à ${plan.maxClients} clients. Passez à l'offre Pro pour en ajouter davantage.`,
+      message: `Votre offre ${plan.name} est limitée à ${plan.maxClients} clients. Passez à l'offre ${plan.id === "free" ? "Pro" : "Business"} pour en ajouter davantage.`,
     };
   }
 
