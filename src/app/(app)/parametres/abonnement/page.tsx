@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
-import { CreditCard, Check } from "lucide-react";
+import { CreditCard } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { getProfile } from "@/lib/data/profile";
 import { PLAN_LIST, getPlan } from "@/lib/plans";
 import { isStripeConfigured } from "@/lib/stripe";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
+import { PlanCard } from "@/components/plan-card";
 import { Badge } from "@/components/ui/badge";
 import { ActionButton } from "@/components/app/action-button";
 import { startCheckoutAction, openBillingPortalAction } from "./actions";
-import { cn, formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Abonnement" };
 
@@ -80,38 +81,21 @@ export default async function SubscriptionPage({ searchParams }: PageProps<"/par
         </div>
       </Card>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-5 md:grid-cols-3">
         {PLAN_LIST.map((plan) => {
           const isCurrent = plan.id === current.id;
           return (
-            <Card key={plan.id} className={cn("flex flex-col", plan.id === "pro" && "border-brand/60 shadow-[0_0_0_1px_rgb(124_92_255/0.3)]")}>
-              <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold">{plan.name}</h2>
-                {plan.id === "pro" && <Badge tone="brand">Populaire</Badge>}
-              </div>
-              <p className="mt-2 text-3xl font-bold">
-                {plan.priceMonthly === 0 ? "0 €" : `${plan.priceMonthly} €`}
-                <span className="text-sm font-normal text-fg-subtle"> / mois</span>
-              </p>
-              <ul className="mt-4 flex-1 space-y-2 text-sm text-fg-muted">
-                {plan.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2">
-                    <Check className="mt-0.5 size-4 shrink-0 text-success" /> {f}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-5">
-                {isCurrent ? (
-                  <span className="inline-flex h-10 w-full items-center justify-center rounded-lg border border-border text-sm text-fg-muted">Offre actuelle</span>
-                ) : plan.id === "free" ? (
-                  <span className="inline-flex h-10 w-full items-center justify-center text-xs text-fg-subtle">Résiliez via « Gérer mon abonnement »</span>
-                ) : (
-                  <ActionButton action={startCheckoutAction.bind(null, plan.id)} variant={plan.id === "pro" ? "primary" : "secondary"} size="md" className="w-full">
-                    {stripeReady ? `Passer à ${plan.name}` : "Bientôt disponible"}
-                  </ActionButton>
-                )}
-              </div>
-            </Card>
+            <PlanCard key={plan.id} plan={plan}>
+              {isCurrent ? (
+                <span className="inline-flex h-10 w-full items-center justify-center rounded-lg border border-border text-sm text-fg-muted">Votre offre actuelle</span>
+              ) : plan.id === "free" ? (
+                <span className="inline-flex h-10 w-full items-center justify-center text-xs text-fg-subtle">Résiliez via « Gérer mon abonnement »</span>
+              ) : (
+                <ActionButton action={startCheckoutAction.bind(null, plan.id)} variant={plan.id === "pro" ? "primary" : "secondary"} size="md" className="w-full">
+                  {stripeReady ? `Choisir ${plan.name}` : "Bientôt disponible"}
+                </ActionButton>
+              )}
+            </PlanCard>
           );
         })}
       </div>

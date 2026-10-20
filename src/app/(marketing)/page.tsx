@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Users, FileText, BellRing, Sparkles, ShieldCheck, Smartphone, Check, ArrowRight } from "lucide-react";
+import { Users, FileText, BellRing, Sparkles, ShieldCheck, Smartphone, ArrowRight } from "lucide-react";
 import { LinkButton } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PLAN_LIST } from "@/lib/plans";
+import { PlanCard } from "@/components/plan-card";
 import { cn } from "@/lib/utils";
 import { TESTIMONIALS } from "@/lib/testimonials";
 import { Testimonials } from "@/components/marketing/testimonials";
@@ -154,25 +155,11 @@ export default function LandingPage() {
           </div>
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             {PLAN_LIST.map((plan) => (
-              <div key={plan.id} className={cn("card flex flex-col p-6", plan.id === "pro" && "border-brand/60 shadow-[0_0_0_1px_rgb(124_92_255/0.3)]")}>
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">{plan.name}</h3>
-                  {plan.id === "pro" && <Badge tone="brand">Recommandé</Badge>}
-                </div>
-                <p className="mt-3 text-4xl font-bold">
-                  {plan.priceMonthly} €<span className="text-base font-normal text-fg-subtle"> / mois</span>
-                </p>
-                <ul className="mt-5 flex-1 space-y-2 text-sm text-fg-muted">
-                  {plan.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2">
-                      <Check className="mt-0.5 size-4 shrink-0 text-success" /> {f}
-                    </li>
-                  ))}
-                </ul>
-                <LinkButton href="/inscription" variant={plan.id === "pro" ? "primary" : "secondary"} className="mt-6 w-full">
+              <PlanCard key={plan.id} plan={plan}>
+                <LinkButton href="/inscription" variant={plan.id === "pro" ? "primary" : "secondary"} className="w-full">
                   {plan.id === "free" ? "Commencer gratuitement" : `Choisir ${plan.name}`}
                 </LinkButton>
-              </div>
+              </PlanCard>
             ))}
           </div>
           <p className="mt-6 text-center text-xs text-fg-subtle">Prix TTC indicatifs. Les offres payantes seront disponibles après l'activation des paiements.</p>
