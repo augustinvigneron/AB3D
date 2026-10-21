@@ -2,6 +2,8 @@
 export const dynamic = "force-dynamic";
 
 import { AppShell } from "@/components/app/sidebar";
+import { UpgradeProvider } from "@/components/app/upgrade-dialog";
+import { isStripeConfigured } from "@/lib/stripe";
 import { requireUser } from "@/lib/auth";
 import { getProfile } from "@/lib/data/profile";
 import { getPlan } from "@/lib/plans";
@@ -10,15 +12,13 @@ import { signOut } from "@/app/(auth)/actions";
 export default async function AppLayout({ children }: LayoutProps<"/">) {
   const session = await requireUser();
   const profile = await getProfile(session);
+  const plan = getPlan(profile.plan);
 
   return (
-    <AppShell
-      userName={profile.full_name ?? ""}
-      userEmail={session.user.email ?? ""}
-      plan={getPlan(profile.plan)}
-      signOutAction={signOut}
-    >
-      {children}
-    </AppShell>
+    <UpgradeProvider currentPlan={plan.id} stripeReady={isStripeConfigured()}>
+      <AppShell userName={profile.full_name ?? ""} userEmail={session.user.email ?? ""} plan={plan} signOutAction={signOut}>
+        {children}
+      </AppShell>
+    </UpgradeProvider>
   );
 }

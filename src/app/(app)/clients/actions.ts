@@ -4,8 +4,8 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireUser } from "@/lib/auth";
 import { getProfile } from "@/lib/data/profile";
-import { canAddClient, getPlan } from "@/lib/plans";
-import { clientSchema, formDataToObject, zodFieldErrors, type ActionState } from "@/lib/validation/schemas";
+import { canAddClient, getPlan, nextPlan } from "@/lib/plans";
+import { clientSchema, formDataToObject, zodFieldErrors, type ActionState, type UpgradeHint } from "@/lib/validation/schemas";
 
 export type ClientActionState = ActionState & { id?: string };
 
@@ -20,10 +20,12 @@ export async function createClientAction(_prev: ClientActionState, formData: For
   const profile = await getProfile(session);
   const plan = getPlan(profile.plan);
   const { count } = await session.supabase.from("clients").select("id", { count: "exact", head: true }).eq("user_id", session.user.id);
+  const limitHint: UpgradeHint = { feature: `Plus de ${plan.maxClients} clients`, requiredPlan: nextPlan(plan.id) ?? "business" };
   if (!canAddClient(plan.id, count ?? 0)) {
     return {
       ok: false,
       message: `Votre offre ${plan.name} est limitée à ${plan.maxClients} clients. Passez à l'offre ${plan.id === "free" ? "Pro" : "Business"} pour en ajouter davantage.`,
+      upgrade: limitHint,
     };
   }
 
@@ -35,7 +37,7 @@ export async function createClientAction(_prev: ClientActionState, formData: For
 
   if (error) {
     if (error.message.includes("CLIENT_LIMIT_REACHED")) {
-      return { ok: false, message: "Limite de clients atteinte pour votre offre." };
+      return { ok: false, message: "Limite de clients atteinte pour votre offre.", upgrade: limitHint };
     }
     return { ok: false, message: GENERIC_ERROR };
   }

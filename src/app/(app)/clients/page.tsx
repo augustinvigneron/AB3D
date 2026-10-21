@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { Users, UserPlus, Mail, Phone, Building2, CalendarClock } from "lucide-react";
+import { Users, UserPlus, Mail, Phone, Building2, CalendarClock, Lock } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { getProfile } from "@/lib/data/profile";
-import { getPlan } from "@/lib/plans";
+import { canAddClient, getPlan, nextPlan } from "@/lib/plans";
 import { PageHeader } from "@/components/ui/page-header";
 import { LinkButton } from "@/components/ui/button";
+import { UpgradeButton } from "@/components/app/upgrade-dialog";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Badge } from "@/components/ui/badge";
 import { SearchFilters } from "@/components/app/search-filters";
@@ -51,10 +52,17 @@ export default async function ClientsPage({ searchParams }: PageProps<"/clients"
             : `${total ?? 0} client${(total ?? 0) > 1 ? "s" : ""} dans votre portefeuille.`
         }
         actions={
-          <LinkButton href="/clients/nouveau">
-            <UserPlus className="size-4" />
-            Nouveau client
-          </LinkButton>
+          canAddClient(plan.id, total ?? 0) ? (
+            <LinkButton href="/clients/nouveau">
+              <UserPlus className="size-4" />
+              Nouveau client
+            </LinkButton>
+          ) : (
+            <UpgradeButton feature={`Plus de ${plan.maxClients} clients`} requiredPlan={nextPlan(plan.id) ?? "business"}>
+              <Lock className="size-4" />
+              Nouveau client
+            </UpgradeButton>
+          )
         }
       />
 

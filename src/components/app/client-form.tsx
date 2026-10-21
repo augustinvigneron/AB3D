@@ -7,6 +7,7 @@ import { AlertCircle } from "lucide-react";
 import { Button, buttonClasses } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { useToast } from "@/components/ui/toast";
+import { useUpgrade } from "@/components/app/upgrade-dialog";
 import { CLIENT_STATUSES, CLIENT_STATUS_LABELS } from "@/lib/validation/schemas";
 import type { Client } from "@/lib/database.types";
 import type { ClientActionState } from "@/app/(app)/clients/actions";
@@ -21,14 +22,18 @@ export function ClientForm({ action, client, cancelHref }: ClientFormProps) {
   const [state, formAction, pending] = useActionState(action, { ok: false });
   const router = useRouter();
   const { toast } = useToast();
+  const { requireUpgrade } = useUpgrade();
   const errors = state.errors ?? {};
 
   useEffect(() => {
     if (state.ok && state.id) {
       toast(state.message ?? "Enregistré.", "success");
       router.push(`/clients/${state.id}`);
+    } else if (!state.ok && state.upgrade) {
+      // Limite de l'offre atteinte : on montre directement les offres.
+      requireUpgrade(state.upgrade);
     }
-  }, [state, router, toast]);
+  }, [state, router, toast, requireUpgrade]);
 
   return (
     <form action={formAction} className="space-y-5" noValidate>

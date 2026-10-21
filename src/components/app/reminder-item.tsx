@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Check, Pencil, RotateCcw, Mail, Phone, MessageSquare, MapPin, MoreHorizontal, Sparkles, CalendarPlus } from "lucide-react";
+import { useUpgrade } from "@/components/app/upgrade-dialog";
 import { googleCalendarUrl } from "@/lib/google-links";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/toast";
@@ -36,6 +37,7 @@ type ReminderItemProps = {
 };
 
 export function ReminderItem({ reminder, clients, quotes, googleShortcuts = false }: ReminderItemProps) {
+  const { requireUpgrade } = useUpgrade();
   const [editing, setEditing] = useState(false);
   const [editKey, setEditKey] = useState(0);
   const [pending, startTransition] = useTransition();
@@ -130,14 +132,15 @@ export function ReminderItem({ reminder, clients, quotes, googleShortcuts = fals
               <CalendarPlus className="size-4" />
             </a>
           ) : (
-            <Link
-              href="/parametres/abonnement"
+            <button
+              type="button"
+              onClick={() => requireUpgrade({ feature: "Rappels dans Google Agenda", requiredPlan: "business" })}
               className="hidden rounded-lg p-2 text-fg-subtle opacity-60 hover:bg-surface-2 hover:opacity-100 sm:block"
               aria-label="Ajouter à Google Agenda : disponible avec l'offre Business"
               title="Ajouter à Google Agenda — offre Business"
             >
               <CalendarPlus className="size-4" />
-            </Link>
+            </button>
           ))}
         {done ? (
           <button type="button" onClick={toggle} disabled={pending} className="rounded-lg p-2 text-fg-muted hover:bg-surface-2 hover:text-fg" aria-label="Rouvrir">

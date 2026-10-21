@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { PlanId } from "@/lib/plans";
 
 /* ───────────── Helpers ───────────── */
 
@@ -199,10 +200,14 @@ export type Preferences = z.infer<typeof preferencesSchema>;
 
 export type FieldErrors = Record<string, string[] | undefined>;
 
+/** Fonctionnalité refusée faute d'offre suffisante : le client ouvre la fenêtre des offres. */
+export type UpgradeHint = { feature: string; requiredPlan: PlanId };
+
 export type ActionState = {
   ok: boolean;
   message?: string;
   errors?: FieldErrors;
+  upgrade?: UpgradeHint;
 };
 
 export const initialActionState: ActionState = { ok: false };

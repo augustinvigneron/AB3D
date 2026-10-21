@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import Link from "next/link";
 import { Sparkles, Copy, RefreshCw, Pencil, Check, AlertCircle, PenLine, Info, ShieldCheck, Mail, Lock } from "lucide-react";
 import { gmailComposeUrl } from "@/lib/google-links";
+import { useUpgrade } from "@/components/app/upgrade-dialog";
+import { isPlanId, nextPlan } from "@/lib/plans";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
@@ -43,9 +44,16 @@ export function AiAssistant({ mode, providerLabel, initialQuota, quotes, googleS
   const [clientName, setClientName] = useState(defaults.clientName);
   const [quoteId, setQuoteId] = useState(quotes.some((q) => q.id === defaults.quoteId) ? defaults.quoteId : "");
   const { toast } = useToast();
+  const { requireUpgrade } = useUpgrade();
 
   const selectedQuote = quotes.find((q) => q.id === quoteId) ?? null;
   const quotaLeft = quota && quota.limit !== null ? Math.max(0, quota.limit - quota.used) : Infinity;
+
+  /** Quota épuisé : ouvre la fenêtre des offres sur celle qui lève la limite. */
+  function askUpgradeForQuota(planId: string | undefined = quota?.plan) {
+    const current = isPlanId(planId) ? planId : "free";
+    requireUpgrade({ feature: "Plus de générations de messages par mois", requiredPlan: nextPlan(current) ?? "business" });
+  }
 
   function onQuoteChange(id: string) {
     setQuoteId(id);
@@ -68,6 +76,7 @@ export function AiAssistant({ mode, providerLabel, initialQuota, quotes, googleS
         setError(data.error ?? "Erreur inattendue.");
         if (data.errors) setFieldErrors(data.errors);
         if (data.quota) setQuota(data.quota);
+        if (res.status === 429) askUpgradeForQuota(data.quota?.plan);
         return;
       }
       setVariants(data.variants);
@@ -195,10 +204,16 @@ export function AiAssistant({ mode, providerLabel, initialQuota, quotes, googleS
             </p>
           )}
 
-          <Button type="submit" className="w-full" loading={loading} disabled={quotaLeft === 0}>
-            {isAi ? <Sparkles className="size-4" /> : <PenLine className="size-4" />}
-            {quotaLeft === 0 ? "Quota mensuel atteint — passez à l'offre supérieure" : "Rédiger 3 propositions"}
-          </Button>
+          {quotaLeft === 0 ? (
+            <Button type="button" className="w-full" onClick={() => askUpgradeForQuota()}>
+              <Lock className="size-4" /> Quota mensuel atteint — voir les offres
+            </Button>
+          ) : (
+            <Button type="submit" className="w-full" loading={loading}>
+              {isAi ? <Sparkles className="size-4" /> : <PenLine className="size-4" />}
+              Rédiger 3 propositions
+            </Button>
+          )}
           <p className="text-xs text-fg-subtle">
             {isAi && providerLabel ? `Génération via ${providerLabel}. ` : ""}
             Chaque génération (y compris « Autres formulations ») compte pour 1 dans votre quota mensuel.
@@ -236,7 +251,7 @@ export function AiAssistant({ mode, providerLabel, initialQuota, quotes, googleS
                   <Info className="size-3" /> Relisez avant d'envoyer.
                 </span>
               </div>
-              <Button variant="secondary" size="sm" loading={loading} disabled={quotaLeft === 0 || !lastPayload} onClick={regenerate}>
+              <Button variant="secondary" size="sm" loading={loading} disabled={!lastPayload} onClick={quotaLeft === 0 ? () => askUpgradeForQuota() : regenerate}>
                 <RefreshCw className="size-4" /> Autres formulations
               </Button>
             </div>
@@ -256,6 +271,7 @@ export function AiAssistant({ mode, providerLabel, initialQuota, quotes, googleS
 }
 
 function VariantCard({ variant, gmail, onCopied }: { variant: AiVariant; gmail: { to: string | null } | null; onCopied: () => void }) {
+  const { requireUpgrade } = useUpgrade();
   const [editing, setEditing] = useState(false);
   const [subject, setSubject] = useState(variant.subject);
   const [body, setBody] = useState(variant.body);
@@ -297,13 +313,14 @@ function VariantCard({ variant, gmail, onCopied }: { variant: AiVariant; gmail: 
               <Mail className="size-4" /> Gmail
             </a>
           ) : (
-            <Link
-              href="/parametres/abonnement"
-              className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border px-2.5 text-xs text-fg-subtle hover:text-fg"
+            <button
+              type="button"
+              onClick={() => requireUpgrade({ feature: "Envoi via Gmail en 1 clic", requiredPlan: "business" })}
+              className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border px-2.5 text-xs text-fg-subtle transition-colors hover:border-border-strong hover:text-fg"
               title="Ouvrir dans Gmail — disponible avec l'offre Business"
             >
               <Lock className="size-3.5" /> Gmail
-            </Link>
+            </button>
           )}
         </div>
       </div>

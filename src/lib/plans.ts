@@ -75,3 +75,10 @@ export function canGenerate(planId: PlanId, usedThisMonth: number): boolean {
   const limit = PLANS[planId].maxAiGenerationsPerMonth;
   return limit === null || usedThisMonth < limit;
 }
+
+/** Offre juste au-dessus de celle donnée (celle qui lève la limite rencontrée) ; null pour Business. */
+export function nextPlan(planId: PlanId): PlanId | null {
+  if (planId === "free") return "pro";
+  if (planId === "pro") return "business";
+  return null;
+}

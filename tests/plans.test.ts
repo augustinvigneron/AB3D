@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { PLANS, canAddClient, canGenerate, getPlan } from "@/lib/plans";
+import { PLANS, canAddClient, canGenerate, getPlan, nextPlan } from "@/lib/plans";
 
 describe("quotas des offres", () => {
   it("respecte les limites annoncées", () => {
@@ -39,5 +39,13 @@ describe("quotas des offres", () => {
     expect(getPlan("premium").id).toBe("free");
     expect(getPlan(null).id).toBe("free");
     expect(getPlan("business").id).toBe("business");
+  });
+});
+
+describe("offre à proposer quand une limite est atteinte", () => {
+  it("propose l'offre juste au-dessus, et rien au-delà de Business", () => {
+    expect(nextPlan("free")).toBe("pro");
+    expect(nextPlan("pro")).toBe("business");
+    expect(nextPlan("business")).toBeNull();
   });
 });
