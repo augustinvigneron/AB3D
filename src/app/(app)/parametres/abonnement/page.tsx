@@ -82,10 +82,10 @@ export default async function SubscriptionPage({ searchParams }: PageProps<"/par
       </Card>
 
       <div className="grid gap-5 md:grid-cols-3">
-        {PLAN_LIST.map((plan) => {
+        {PLAN_LIST.map((plan, index) => {
           const isCurrent = plan.id === current.id;
           return (
-            <PlanCard key={plan.id} plan={plan}>
+            <PlanCard key={plan.id} plan={plan} index={index}>
               {isCurrent ? (
                 <span className="inline-flex h-10 w-full items-center justify-center rounded-lg border border-border text-sm text-fg-muted">Votre offre actuelle</span>
               ) : plan.id === "free" ? (

@@ -107,11 +107,251 @@
   }
 }
 
+/* ───────────── Animations ─────────────
+   Tout est en CSS (aucune librairie). Désactivé si l'utilisateur
+   a demandé « réduire les animations » dans son système. */
+
+@property --beam-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes beam-spin {
+  to {
+    --beam-angle: 360deg;
+  }
+}
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+@keyframes gradient-pan {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+@keyframes aurora {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(6%, -8%) scale(1.1);
+  }
+  66% {
+    transform: translate(-6%, 6%) scale(0.95);
+  }
+}
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 8px 24px -10px rgb(124 92 255 / 0.8), 0 0 0 0 rgb(124 92 255 / 0.45);
+  }
+  50% {
+    box-shadow: 0 8px 28px -8px rgb(124 92 255 / 0.95), 0 0 0 8px rgb(124 92 255 / 0);
+  }
+}
+@keyframes ping-soft {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  80%,
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@layer components {
+  /* Apparition au défilement : [data-reveal] + RevealObserver (layout racine).
+     Sans JavaScript, le contenu reste simplement visible. */
+  html.reveal-ready [data-reveal] {
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: calc(var(--i, 0) * 90ms);
+  }
+  html.reveal-ready [data-reveal]:not(.is-visible) {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+  html.reveal-ready [data-reveal="left"]:not(.is-visible) {
+    transform: translateX(-24px);
+  }
+  /* Les éléments d'une liste apparaissent l'un après l'autre */
+  html.reveal-ready [data-reveal] [data-stagger] > * {
+    transition:
+      opacity 0.5s ease-out,
+      transform 0.5s ease-out;
+  }
+  html.reveal-ready [data-reveal]:not(.is-visible) [data-stagger] > * {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  html.reveal-ready [data-reveal].is-visible [data-stagger] > * {
+    transition-delay: calc(var(--i, 0) * 90ms + 250ms);
+  }
+  [data-stagger] > :nth-child(1) { --i: 0; }
+  [data-stagger] > :nth-child(2) { --i: 1; }
+  [data-stagger] > :nth-child(3) { --i: 2; }
+  [data-stagger] > :nth-child(4) { --i: 3; }
+  [data-stagger] > :nth-child(5) { --i: 4; }
+  [data-stagger] > :nth-child(6) { --i: 5; }
+  [data-stagger] > :nth-child(7) { --i: 6; }
+
+  /* Entrée au chargement, en cascade (accueil) */
+  .enter {
+    animation: rise-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--i, 0) * 110ms);
+  }
+
+  /* Bouton principal : reflet lumineux qui traverse au survol */
+  .btn-shine {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .btn-shine::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.35) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .btn-shine:hover::after {
+    transform: translateX(120%);
+  }
+  /* Flèche qui avance au survol */
+  .btn-shine .lucide-arrow-right,
+  .btn-nudge .lucide-arrow-right {
+    transition: transform 0.25s ease;
+  }
+  .btn-shine:hover .lucide-arrow-right,
+  .btn-nudge:hover .lucide-arrow-right {
+    transform: translateX(4px);
+  }
+  /* Halo qui respire (bouton d'appel principal) */
+  .btn-pulse {
+    animation: glow-pulse 2.6s ease-in-out infinite;
+  }
+
+  /* Carte qui se soulève au survol */
+  .lift {
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.35s ease,
+      border-color 0.35s ease;
+  }
+  .lift:hover {
+    transform: translateY(-6px);
+    border-color: var(--color-border-strong);
+    box-shadow:
+      0 1px 0 0 rgb(255 255 255 / 0.04) inset,
+      0 24px 50px -20px rgb(124 92 255 / 0.45);
+  }
+
+  /* Bordure lumineuse qui tourne autour de la carte (offre recommandée) */
+  .beam {
+    position: relative;
+    isolation: isolate;
+  }
+  .beam::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: conic-gradient(from var(--beam-angle), transparent 0deg, #7c5cff 60deg, #e879f9 110deg, transparent 170deg, transparent 360deg);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: beam-spin 4s linear infinite;
+  }
+
+  /* Reflet qui glisse sur un badge */
+  .shimmer {
+    background-image: linear-gradient(110deg, transparent 35%, rgb(255 255 255 / 0.22) 50%, transparent 65%);
+    background-size: 250% 100%;
+    background-repeat: no-repeat;
+    animation: shimmer 3.2s ease-in-out infinite;
+  }
+
+  /* Texte en dégradé animé */
+  .text-gradient-anim {
+    background-image: linear-gradient(90deg, #7c5cff, #c084fc, #e879f9, #a78bfa, #7c5cff);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gradient-pan 6s ease-in-out infinite;
+  }
+
+  .float {
+    animation: float 6s ease-in-out infinite;
+  }
+  .aurora {
+    animation: aurora 18s ease-in-out infinite;
+  }
+  .ping-soft {
+    animation: ping-soft 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  /* Icône qui s'anime au survol de sa carte */
+  .group:hover .icon-pop {
+    transform: scale(1.12) rotate(-6deg);
+  }
+  .icon-pop {
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Réponse de la FAQ qui glisse à l'ouverture */
+  details[open] > .faq-answer {
+    animation: rise-in 0.35s ease-out both;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    animation-delay: 0s !important;
   }
 }

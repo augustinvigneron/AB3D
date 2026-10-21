@@ -10,9 +10,10 @@ const base =
   "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-brand text-brand-fg shadow-[0_8px_24px_-10px_rgb(124_92_255/0.8)] hover:bg-brand-hover",
-  secondary: "bg-surface-2 text-fg border border-border hover:border-border-strong hover:bg-surface",
-  outline: "border border-border-strong text-fg hover:bg-surface-2",
+  primary:
+    "btn-shine bg-brand text-brand-fg shadow-[0_8px_24px_-10px_rgb(124_92_255/0.8)] hover:-translate-y-0.5 hover:bg-brand-hover hover:shadow-[0_14px_30px_-10px_rgb(124_92_255/0.9)]",
+  secondary: "btn-nudge bg-surface-2 text-fg border border-border hover:-translate-y-0.5 hover:border-border-strong hover:bg-surface",
+  outline: "btn-nudge border border-border-strong text-fg hover:-translate-y-0.5 hover:bg-surface-2",
   ghost: "text-fg-muted hover:bg-surface-2 hover:text-fg",
   danger: "bg-danger/90 text-white hover:bg-danger",
 };
