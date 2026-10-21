@@ -37,7 +37,7 @@ export function ClientForm({ action, client, cancelHref }: ClientFormProps) {
 
   return (
     <form action={formAction} className="space-y-5" noValidate>
-      {state.message && !state.ok && (
+      {state.message && !state.ok && !state.upgrade && (
         <p role="alert" className="flex items-start gap-2 rounded-lg border border-danger/30 bg-danger-soft px-3 py-2 text-sm">
           <AlertCircle className="mt-0.5 size-4 shrink-0 text-danger" />
           {state.message}

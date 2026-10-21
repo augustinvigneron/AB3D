@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { Users, UserPlus, Mail, Phone, Building2, CalendarClock, Lock } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { getProfile } from "@/lib/data/profile";
-import { canAddClient, getPlan, nextPlan } from "@/lib/plans";
+import { canAddClient, clientLimitFeature, getPlan, nextPlan } from "@/lib/plans";
 import { PageHeader } from "@/components/ui/page-header";
 import { LinkButton } from "@/components/ui/button";
 import { UpgradeButton } from "@/components/app/upgrade-dialog";
@@ -58,7 +58,11 @@ export default async function ClientsPage({ searchParams }: PageProps<"/clients"
               Nouveau client
             </LinkButton>
           ) : (
-            <UpgradeButton feature={`Plus de ${plan.maxClients} clients`} requiredPlan={nextPlan(plan.id) ?? "business"}>
+            <UpgradeButton
+              feature={clientLimitFeature(nextPlan(plan.id) ?? "business")}
+              requiredPlan={nextPlan(plan.id) ?? "business"}
+              title={`Limite de ${plan.maxClients} clients atteinte sur l'offre ${plan.name}`}
+            >
               <Lock className="size-4" />
               Nouveau client
             </UpgradeButton>

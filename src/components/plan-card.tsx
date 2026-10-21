@@ -14,16 +14,17 @@ type PlanCardProps = {
   /** Apparition au défilement. À désactiver dans une fenêtre modale (jamais observée). */
   reveal?: boolean;
   compact?: boolean;
+  className?: string;
   children: ReactNode;
 };
 
 /** Carte d'offre, identique sur la page Tarifs, sur Paramètres → Abonnement et dans la fenêtre « changer d'offre ». */
-export function PlanCard({ plan, index = 0, highlight = plan.id === "pro", badgeLabel = "Recommandé", reveal = true, compact = false, children }: PlanCardProps) {
+export function PlanCard({ plan, index = 0, highlight = plan.id === "pro", badgeLabel = "Recommandé", reveal = true, compact = false, className, children }: PlanCardProps) {
   return (
     <div
       data-reveal={reveal ? "" : undefined}
       style={{ "--i": index } as CSSProperties}
-      className={cn("card lift flex flex-col", compact ? "p-5" : "p-6", highlight && "beam border-brand/60 shadow-[0_0_0_1px_rgb(124_92_255/0.3)]")}
+      className={cn("card lift flex flex-col", compact ? "p-5" : "p-6", highlight && "beam border-brand/60 shadow-[0_0_0_1px_rgb(124_92_255/0.3)]", className)}
     >
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">{plan.name}</h3>

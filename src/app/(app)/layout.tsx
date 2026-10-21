@@ -15,7 +15,11 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
   const plan = getPlan(profile.plan);
 
   return (
-    <UpgradeProvider currentPlan={plan.id} stripeReady={isStripeConfigured()}>
+    <UpgradeProvider
+      currentPlan={plan.id}
+      stripeReady={isStripeConfigured()}
+      hasSubscription={Boolean(profile.stripe_customer_id && profile.stripe_subscription_id) && plan.id !== "free"}
+    >
       <AppShell userName={profile.full_name ?? ""} userEmail={session.user.email ?? ""} plan={plan} signOutAction={signOut}>
         {children}
       </AppShell>

@@ -49,3 +49,15 @@ describe("offre à proposer quand une limite est atteinte", () => {
     expect(nextPlan("business")).toBeNull();
   });
 });
+
+describe("libellés des limites dans la fenêtre des offres", () => {
+  it("reprend les mots des cartes d'offres", async () => {
+    const { clientLimitFeature, generationLimitFeature } = await import("@/lib/plans");
+    expect(clientLimitFeature("pro")).toBe("Jusqu'à 300 clients");
+    expect(clientLimitFeature("business")).toBe("Clients illimités");
+    expect(generationLimitFeature("pro")).toBe("100 générations de messages par mois");
+    expect(generationLimitFeature("business")).toBe("Générations de messages illimitées");
+    expect(PLANS.pro.features).toContain(clientLimitFeature("pro"));
+    expect(PLANS.business.features).toContain(generationLimitFeature("business"));
+  });
+});

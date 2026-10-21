@@ -4,7 +4,7 @@ import { useState, type FormEvent } from "react";
 import { Sparkles, Copy, RefreshCw, Pencil, Check, AlertCircle, PenLine, Info, ShieldCheck, Mail, Lock } from "lucide-react";
 import { gmailComposeUrl } from "@/lib/google-links";
 import { useUpgrade } from "@/components/app/upgrade-dialog";
-import { isPlanId, nextPlan } from "@/lib/plans";
+import { generationLimitFeature, isPlanId, nextPlan } from "@/lib/plans";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
@@ -52,7 +52,8 @@ export function AiAssistant({ mode, providerLabel, initialQuota, quotes, googleS
   /** Quota épuisé : ouvre la fenêtre des offres sur celle qui lève la limite. */
   function askUpgradeForQuota(planId: string | undefined = quota?.plan) {
     const current = isPlanId(planId) ? planId : "free";
-    requireUpgrade({ feature: "Plus de générations de messages par mois", requiredPlan: nextPlan(current) ?? "business" });
+    const target = nextPlan(current) ?? "business";
+    requireUpgrade({ feature: generationLimitFeature(target), requiredPlan: target });
   }
 
   function onQuoteChange(id: string) {
@@ -73,10 +74,14 @@ export function AiAssistant({ mode, providerLabel, initialQuota, quotes, googleS
       });
       const data = await res.json();
       if (!res.ok) {
+        if (data.quota) setQuota(data.quota);
+        if (res.status === 429) {
+          // La fenêtre des offres porte seule le message.
+          askUpgradeForQuota(data.quota?.plan);
+          return;
+        }
         setError(data.error ?? "Erreur inattendue.");
         if (data.errors) setFieldErrors(data.errors);
-        if (data.quota) setQuota(data.quota);
-        if (res.status === 429) askUpgradeForQuota(data.quota?.plan);
         return;
       }
       setVariants(data.variants);
@@ -93,6 +98,10 @@ export function AiAssistant({ mode, providerLabel, initialQuota, quotes, googleS
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (quotaLeft === 0) {
+      askUpgradeForQuota();
+      return;
+    }
     const form = new FormData(e.currentTarget);
     const payload: Record<string, string | number> = {};
     form.forEach((v, k) => {
@@ -315,11 +324,12 @@ function VariantCard({ variant, gmail, onCopied }: { variant: AiVariant; gmail: 
           ) : (
             <button
               type="button"
-              onClick={() => requireUpgrade({ feature: "Envoi via Gmail en 1 clic", requiredPlan: "business" })}
-              className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border px-2.5 text-xs text-fg-subtle transition-colors hover:border-border-strong hover:text-fg"
+              onClick={() => requireUpgrade({ feature: "Message prêt dans Gmail en 1 clic", requiredPlan: "business" })}
+              className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border px-2.5 text-xs text-fg-muted transition-colors hover:border-border-strong hover:text-fg"
               title="Ouvrir dans Gmail — disponible avec l'offre Business"
             >
               <Lock className="size-3.5" /> Gmail
+              <span className="sr-only"> — disponible avec l'offre Business</span>
             </button>
           )}
         </div>

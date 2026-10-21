@@ -82,3 +82,15 @@ export function nextPlan(planId: PlanId): PlanId | null {
   if (planId === "pro") return "business";
   return null;
 }
+
+/** Libellé de la limite de clients levée par l'offre cible (mêmes mots que sa carte). */
+export function clientLimitFeature(target: PlanId): string {
+  const max = PLANS[target].maxClients;
+  return max === null ? "Clients illimités" : `Jusqu'à ${max} clients`;
+}
+
+/** Libellé du quota de messages levé par l'offre cible (mêmes mots que sa carte). */
+export function generationLimitFeature(target: PlanId): string {
+  const max = PLANS[target].maxAiGenerationsPerMonth;
+  return max === null ? "Générations de messages illimitées" : `${max} générations de messages par mois`;
+}

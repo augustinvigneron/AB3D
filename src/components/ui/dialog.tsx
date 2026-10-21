@@ -22,6 +22,7 @@ type DialogProps = {
 export function Dialog({ open, onClose, title, description, children, footer, size = "md" }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
+  const descId = useId();
 
   useEffect(() => {
     const el = ref.current;
@@ -35,18 +36,27 @@ export function Dialog({ open, onClose, title, description, children, footer, si
       ref={ref}
       onClose={onClose}
       onClick={(e) => {
-        if (e.target === ref.current) onClose();
+        // Ferme seulement sur un clic réellement hors de la boîte (pas sur sa barre de défilement).
+        const el = ref.current;
+        if (!el || e.target !== el) return;
+        const r = el.getBoundingClientRect();
+        if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) onClose();
       }}
       aria-labelledby={titleId}
-      className={`m-auto w-[calc(100%-2rem)] ${size === "lg" ? "max-w-5xl" : "max-w-md"} rounded-2xl border border-border bg-surface p-0 text-fg shadow-card backdrop:bg-transparent open:animate-rise`}
+      aria-describedby={description ? descId : undefined}
+      className={`m-auto w-[calc(100%-2rem)] ${size === "lg" ? "max-w-5xl" : "max-w-md"} max-h-[calc(100dvh-2rem)] flex-col rounded-2xl border border-border bg-surface p-0 text-fg shadow-card backdrop:bg-transparent open:flex open:animate-rise`}
     >
-      <div className="p-6">
+      <div className="flex min-h-0 flex-col p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
             <h2 id={titleId} className="text-lg font-semibold">
               {title}
             </h2>
-            {description && <p className="mt-1 text-sm text-fg-muted">{description}</p>}
+            {description && (
+              <p id={descId} className="mt-1 text-sm text-fg-muted">
+                {description}
+              </p>
+            )}
           </div>
           <button
             type="button"
@@ -57,7 +67,7 @@ export function Dialog({ open, onClose, title, description, children, footer, si
             <X className="size-5" />
           </button>
         </div>
-        {children && <div className="mt-4">{children}</div>}
+        {children && <div className="mt-4 min-h-0 flex-1 overflow-y-auto">{children}</div>}
         {footer && <div className="mt-6 flex justify-end gap-2">{footer}</div>}
       </div>
     </dialog>
